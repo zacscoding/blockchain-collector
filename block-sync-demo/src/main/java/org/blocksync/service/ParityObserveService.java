@@ -1,13 +1,10 @@
 package org.blocksync.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.entity.Node;
 import org.blocksync.handler.BlockEventHandler;
-import org.blocksync.handler.DumpBlockEventHandler;
-import org.blocksync.handler.SyncBlockEventHandler;
 import org.blocksync.manager.ParityNodeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;

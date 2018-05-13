@@ -3,8 +3,9 @@ package org.blocksync.configuration;
 import java.util.ArrayList;
 import java.util.List;
 import org.blocksync.handler.BlockEventHandler;
-import org.blocksync.handler.DumpBlockEventHandler;
-import org.blocksync.handler.SyncBlockEventHandler;
+import org.blocksync.handler.DisplayBlockMinerHandler;
+import org.blocksync.handler.DumpBlockHandler;
+import org.blocksync.handler.SyncCheckHandler;
 import org.blocksync.manager.ParityNodeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,9 @@ public class BlockHandlerConfiguration {
     public List<BlockEventHandler> blockEventHandlers() {
         List<BlockEventHandler> eventHandlers = new ArrayList<>();
 
-        eventHandlers.add(new DumpBlockEventHandler(blockLogDir));
-        eventHandlers.add(new SyncBlockEventHandler(context.getBean(ParityNodeManager.class)));
+        eventHandlers.add(new DumpBlockHandler(blockLogDir));
+        eventHandlers.add(new DisplayBlockMinerHandler());
+        eventHandlers.add(new SyncCheckHandler(context.getBean(ParityNodeManager.class)));
 
         return eventHandlers;
     }

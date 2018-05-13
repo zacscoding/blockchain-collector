@@ -21,7 +21,7 @@ import org.web3j.utils.Numeric;
  * @GitHub : https://github.com/zacscoding
  */
 @Slf4j
-public class SyncBlockEventHandler implements BlockEventHandler {
+public class SyncCheckHandler implements BlockEventHandler {
 
     // private BlockingQueue<BigInteger> newBlockNumberQueue = new LinkedBlockingQueue<>();
     private PriorityBlockingQueue<BigInteger> newBlockNumberQueue = new PriorityBlockingQueue<>(50);
@@ -30,7 +30,7 @@ public class SyncBlockEventHandler implements BlockEventHandler {
     private BigInteger synchronizedBlockNumber;
 
 
-    public SyncBlockEventHandler(NodeManager nodeManager) {
+    public SyncCheckHandler(NodeManager nodeManager) {
         this.nodeManager = nodeManager;
         init();
     }

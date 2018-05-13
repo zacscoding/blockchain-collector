@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.entity.Node;
 import org.blocksync.util.GsonUtil;
@@ -22,7 +21,7 @@ import org.web3j.protocol.core.methods.response.EthBlock.Block;
  * @GitHub : https://github.com/zacscoding
  */
 @Slf4j
-public class DumpBlockEventHandler implements BlockEventHandler {
+public class DumpBlockHandler implements BlockEventHandler {
 
     private static Object lock = new Object();
 
@@ -30,7 +29,7 @@ public class DumpBlockEventHandler implements BlockEventHandler {
     private String logDir;
     private boolean dump;
 
-    public DumpBlockEventHandler(String logDir) {
+    public DumpBlockHandler(String logDir) {
         this.logDir = logDir;
         if (StringUtils.hasText(logDir)) {
             dump = true;
