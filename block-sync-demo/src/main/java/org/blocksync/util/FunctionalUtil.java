@@ -1,4 +1,4 @@
-package org.blocksync.funtional;
+package org.blocksync.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  *
  * @author zacconding
  */
-public class UnderScore {
+public class FunctionalUtil {
 
     public static <T, V> List<V> map(final List<T> list, final Function<T, V> iteratee) {
         if (isInvalid(list)) {

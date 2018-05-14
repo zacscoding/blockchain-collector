@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.entity.Node;
-import org.blocksync.funtional.UnderScore;
+import org.blocksync.util.FunctionalUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
@@ -49,12 +49,12 @@ public class ParityNodeManager implements NodeManager {
 
     @Override
     public Node getNodeFromName(String name) {
-        return UnderScore.find(nodes, node -> node.getName().equals(name));
+        return FunctionalUtil.find(nodes, node -> node.getName().equals(name));
     }
 
     @Override
     public Node getNodeFromUrl(String url) {
-        return UnderScore.find(nodes, node -> node.getUrl().equals(url));
+        return FunctionalUtil.find(nodes, node -> node.getUrl().equals(url));
     }
 
     @Override
@@ -73,13 +73,13 @@ public class ParityNodeManager implements NodeManager {
 
     @Override
     public Web3j getWeb3jFromName(String name) {
-        int idx = UnderScore.findIndex(nodes, node -> node.getName().equals(name));
+        int idx = FunctionalUtil.findIndex(nodes, node -> node.getName().equals(name));
         return getWeb3j(idx);
     }
 
     @Override
     public Web3j getWeb3jFromUrl(String url) {
-        int idx = UnderScore.findIndex(nodes, node -> node.getName().equals(url));
+        int idx = FunctionalUtil.findIndex(nodes, node -> node.getName().equals(url));
         return getWeb3j(idx);
     }
 
@@ -130,7 +130,7 @@ public class ParityNodeManager implements NodeManager {
             String nodeName = value.substring(0, urlIdx);
             String url = value.substring(urlIdx + 1);
 
-            int idx = UnderScore.findIndex(ret, node -> node.getName().equals(nodeName) || node.getUrl().equals(url));
+            int idx = FunctionalUtil.findIndex(ret, node -> node.getName().equals(nodeName) || node.getUrl().equals(url));
             if (idx != -1) {
                 log.error("Node name & url must be different. => " + nodeName + ", " + url);
                 System.exit(-1);

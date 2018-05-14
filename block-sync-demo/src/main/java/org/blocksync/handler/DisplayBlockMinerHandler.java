@@ -1,6 +1,5 @@
 package org.blocksync.handler;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import org.blocksync.entity.Node;
@@ -12,7 +11,7 @@ import org.web3j.protocol.core.methods.response.EthBlock.Block;
  * @Date 2018-05-14
  * @GitHub : https://github.com/zacscoding
  */
-public class DisplayBlockMinerHandler implements BlockEventHandler {
+public class DisplayBlockMinerHandler extends BlockEventHandlerAdapter{
 
     private static final Object lock = new Object();
 

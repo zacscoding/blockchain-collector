@@ -6,12 +6,16 @@ import org.web3j.protocol.core.methods.response.Transaction;
 
 /**
  * @author zacconding
- * @Date 2018-05-12
+ * @Date 2018-05-14
  * @GitHub : https://github.com/zacscoding
  */
-public interface BlockEventHandler {
+public class BlockEventHandlerAdapter implements BlockEventHandler {
 
-    void onBlock(Node node, EthBlock ethBlock);
+    @Override
+    public void onBlock(Node node, EthBlock ethBlock) {
+    }
 
-    void onPendingTransaction(Node node, Transaction tx);
+    @Override
+    public void onPendingTransaction(Node node, Transaction tx) {
+    }
 }
