@@ -19,6 +19,7 @@ public class ThreadConfiguration {
         //executor.setCorePoolSize(4);
         executor.setMaxPoolSize(50);
         executor.initialize();
+        executor.setDaemon(true);
         return executor;
     }
 }

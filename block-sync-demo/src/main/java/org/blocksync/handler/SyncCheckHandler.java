@@ -16,6 +16,8 @@ import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.utils.Numeric;
 
 /**
+ * Check whether block is synchronized in multiple nodes.
+ *
  * @author zacconding
  * @Date 2018-05-12
  * @GitHub : https://github.com/zacscoding
@@ -47,7 +49,7 @@ public class SyncCheckHandler extends BlockEventHandlerAdapter{
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     BigInteger newBlockNumber = newBlockNumberQueue.take();
-                    log.info("\n## =============================   Check block : {}({})  ============================= ##", newBlockNumber, Numeric.encodeQuantity(newBlockNumber));
+                    log.info("## =============================   Check block : {}({})  ============================= ##", newBlockNumber, Numeric.encodeQuantity(newBlockNumber));
                     Set<BigInteger> pendingBlockNumberSet = new HashSet<>(newBlockNumberQueue.size() + 10, 0.999999F);
                     newBlockNumberQueue.iterator().forEachRemaining(n -> pendingBlockNumberSet.add(n));
                     log.info("## Blocking queue size : {} , distinguish block number size : {}", newBlockNumberQueue.size(), pendingBlockNumberSet.size());

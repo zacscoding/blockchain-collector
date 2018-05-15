@@ -1,23 +1,18 @@
 package org.blocksync.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.entity.Node;
 import org.blocksync.factory.PrintStreamFactory;
 import org.blocksync.util.GsonUtil;
-import org.blocksync.util.SimpleLogger;
 import org.blocksync.wrapper.BlockWrapper;
-import org.springframework.util.StringUtils;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.Transaction;
 
 /**
+ * Dump Block, Transaction.
+ *
  * @author zacconding
  * @Date 2018-05-12
  * @GitHub : https://github.com/zacscoding
@@ -49,9 +44,8 @@ public class DumpEventHandler extends BlockEventHandlerAdapter {
 
     @Override
     public void onPendingTransaction(Node node, Transaction tx) {
-        log.info("## Receive pending tx. hash : {}, from : {}, to : {}, value : {} ", tx.getHash(), tx.getFrom(), tx.getTo(), tx.getValue());
-
         if (dumpPendingTx) {
+            log.info("## Receive pending tx. hash : {}, from : {}, to : {}, value : {} ", tx.getHash(), tx.getFrom(), tx.getTo(), tx.getValue());
             PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[PendingTx]", node);
             GsonUtil.printGsonPretty(ps, tx);
         }

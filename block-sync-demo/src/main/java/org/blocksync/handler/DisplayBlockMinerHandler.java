@@ -7,6 +7,9 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 
 /**
+ * If new block is created, display block`s miner.
+ * It is useful if u use POA.
+ *
  * @author zacconding
  * @Date 2018-05-14
  * @GitHub : https://github.com/zacscoding

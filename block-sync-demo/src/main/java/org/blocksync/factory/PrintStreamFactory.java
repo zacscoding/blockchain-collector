@@ -56,8 +56,5 @@ public class PrintStreamFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
-
 }
