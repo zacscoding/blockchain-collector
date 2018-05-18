@@ -37,7 +37,7 @@ public class DumpEventHandler extends BlockEventHandlerAdapter {
             , node.getName(), node.getUrl(), block.getNumber(), block.getHash(), block.getTransactions().size());
 
         if (dumpBlock) {
-            PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[Block]", node);
+            PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[Block-Event]", node);
             GsonUtil.printGsonPretty(ps, new BlockWrapper(block));
         }
     }
@@ -46,7 +46,7 @@ public class DumpEventHandler extends BlockEventHandlerAdapter {
     public void onPendingTransaction(Node node, Transaction tx) {
         if (dumpPendingTx) {
             log.info("## Receive pending tx. hash : {}, from : {}, to : {}, value : {} ", tx.getHash(), tx.getFrom(), tx.getTo(), tx.getValue());
-            PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[PendingTx]", node);
+            PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[PendingTx-Event]", node);
             GsonUtil.printGsonPretty(ps, tx);
         }
     }

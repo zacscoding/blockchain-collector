@@ -62,11 +62,11 @@ public class BlockHandlerConfiguration {
         }
 
         if (miner) {
-            eventHandlers.add(new DisplayBlockMinerHandler());
+            eventHandlers.add(new DisplayBlockMinerHandler(blockLogDir));
         }
 
         if (syncBlock) {
-            eventHandlers.add(new SyncCheckHandler(context.getBean(ParityNodeManager.class)));
+            eventHandlers.add(new SyncCheckHandler(context.getBean(ParityNodeManager.class), blockLogDir));
         }
 
         if (syncPending) {

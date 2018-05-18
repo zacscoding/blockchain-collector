@@ -1,5 +1,6 @@
 package org.blocksync.handler;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.entity.Node;
+import org.blocksync.factory.PrintStreamFactory;
 import org.blocksync.manager.NodeManager;
 import org.blocksync.util.SimpleLogger;
 import org.web3j.protocol.Web3j;
@@ -30,10 +32,12 @@ public class SyncCheckHandler extends BlockEventHandlerAdapter{
     private NodeManager nodeManager;
     private Thread syncThread;
     private BigInteger synchronizedBlockNumber;
+    private String logDir;
 
 
-    public SyncCheckHandler(NodeManager nodeManager) {
+    public SyncCheckHandler(NodeManager nodeManager, String logDir) {
         this.nodeManager = nodeManager;
+        this.logDir = logDir;
         init();
     }
 
@@ -98,7 +102,9 @@ public class SyncCheckHandler extends BlockEventHandlerAdapter{
                             }
 
                             if (!block.equals(received)) {
-                                SimpleLogger.println("## Find different block : " + newBlockNumber);
+                                PrintStream ps = PrintStreamFactory.getPrintStream(logDir, "[NotSync]blocks");
+                                ps.println("## Find diff block : " + newBlockNumber + " ==> " + nodeManager.getNode(i-1) + "  <==>  " + nodeManager.getNode(i));
+                                log.info("## Find different block : " + newBlockNumber);
                                 isSynchronized = false;
                                 break;
                             }

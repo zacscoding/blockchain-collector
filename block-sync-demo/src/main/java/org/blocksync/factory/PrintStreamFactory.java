@@ -25,14 +25,13 @@ public class PrintStreamFactory {
         printStreamMap = new HashMap<>();
     }
 
-    public static PrintStream getPrintStream(String logDir, String prefix, Node node) {
-        String id = prefix + node.getName();
+    public static PrintStream getPrintStream(String logDir, String id) {
         PrintStream ps = printStreamMap.get(id);
         if (ps == null) {
             try {
                 lock.lock();
-                if ((ps = printStreamMap.get(prefix)) == null) {
-                    ps = createPrintStream(logDir, prefix, node);
+                if ((ps = printStreamMap.get(id)) == null) {
+                    ps = createPrintStream(logDir, id);
                     printStreamMap.put(id, ps);
                 }
             } finally {
@@ -43,18 +42,31 @@ public class PrintStreamFactory {
         return ps;
     }
 
-    private static PrintStream createPrintStream(String logDir, String prefix, Node node) {
+    public static PrintStream getPrintStream(String logDir, String prefix, Node node) {
+        return getPrintStream(logDir, getLogName(prefix, node));
+    }
+
+    private static PrintStream createPrintStream(String logDir, String id) {
         if (!StringUtils.hasText(logDir)) {
             logDir = DEFAULT_LOG_DIR;
         }
 
+        File dirFile = new File(logDir);
+
+        if(!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+
         try {
             // create log file
-            String nodeName = prefix + node.getName() + "-" + node.getUrl().substring("http://".length()).replace(':', '-');
-            File file = new File(logDir, nodeName + ".log");
+            File file = new File(logDir, id + ".log");
             return new PrintStream(new FileOutputStream(file), true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String getLogName(String prefix, Node node) {
+        return prefix + node.getName() + "-" + node.getUrl().substring("http://".length()).replace(':', '-');
     }
 }
