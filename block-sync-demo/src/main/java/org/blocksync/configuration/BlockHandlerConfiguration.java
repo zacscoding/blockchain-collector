@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.handler.BlockEventHandler;
+import org.blocksync.handler.CheckBlockHashEventHandler;
 import org.blocksync.handler.DisplayBlockMinerHandler;
 import org.blocksync.handler.DumpEventHandler;
 import org.blocksync.handler.PendingManageEventHandler;
@@ -44,6 +45,9 @@ public class BlockHandlerConfiguration {
 
     @Value("${handler.sync.block}")
     private boolean syncBlock;
+    @Value("${handler.same.hash}")
+    private boolean checkSameHash;
+
 
     @Value("${handler.sync.pending}")
     private boolean syncPending;
@@ -55,7 +59,10 @@ public class BlockHandlerConfiguration {
         log.info("## Dump : {} (dumpBlock : {}, dumpPendingTx : {})", dump, dumpBlock, dumpPendingTx);
         log.info("## Miner : {}", miner);
         log.info("## Sync Block : {}", syncBlock);
+        log.info("## Check same hash : {}", checkSameHash);
         log.info("## Sync Pending Transaction : {}", syncPending);
+
+        ParityNodeManager parityNodeManager = context.getBean(ParityNodeManager.class);
 
         if (dump) {
             eventHandlers.add(new DumpEventHandler(blockLogDir, dumpBlock, dumpPendingTx));
@@ -66,11 +73,15 @@ public class BlockHandlerConfiguration {
         }
 
         if (syncBlock) {
-            eventHandlers.add(new SyncCheckHandler(context.getBean(ParityNodeManager.class), blockLogDir));
+            eventHandlers.add(new SyncCheckHandler(parityNodeManager, blockLogDir));
         }
 
         if (syncPending) {
-            eventHandlers.add(new PendingManageEventHandler(blockLogDir, context.getBean(ParityNodeManager.class)));
+            eventHandlers.add(new PendingManageEventHandler(blockLogDir, parityNodeManager));
+        }
+
+        if(checkSameHash) {
+            eventHandlers.add(new CheckBlockHashEventHandler(blockLogDir, parityNodeManager));
         }
 
         if (eventHandlers.isEmpty()) {

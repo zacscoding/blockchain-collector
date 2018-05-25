@@ -36,20 +36,25 @@ public class SendTxService {
     @Value("${observe.log.path}")
     private String blockLogDir;
 
+    @Value("${task.send.tx}")
+    private boolean sendTask;
+
     @PostConstruct
     private void setUp() {
-        nodes = parityNodeManager.getNodes();
-        addrs = Arrays.asList(
-            new Pair<>("0x000e1f8e17224e00e7179a3235d431684758250e", "zac1"),
-            new Pair<>("0x00e5dc96b57f4f185296346b03b6d8d70ec56b5d", "zac2"),
-            new Pair<>("0x00ef1bdc7b0392b4fa529c1f0f0902a3ac3b1a73", "zac3"),
-            new Pair<>("0x00e0fcd57c93639ca311217bc107a93b3c4dc4a9", "zac4")
-        );
+        if(sendTask) {
+            nodes = parityNodeManager.getNodes();
+            addrs = Arrays.asList(
+                new Pair<>("0x000e1f8e17224e00e7179a3235d431684758250e", "zac1"),
+                new Pair<>("0x00e5dc96b57f4f185296346b03b6d8d70ec56b5d", "zac2"),
+                new Pair<>("0x00ef1bdc7b0392b4fa529c1f0f0902a3ac3b1a73", "zac3"),
+                new Pair<>("0x00e0fcd57c93639ca311217bc107a93b3c4dc4a9", "zac4")
+            );
 
-        ps = PrintStreamFactory.getPrintStream(blockLogDir, "[Send-Tx]results");
-        sendTxThread = new Thread(createSendTask());
-        sendTxThread.setDaemon(true);
-        sendTxThread.start();
+            ps = PrintStreamFactory.getPrintStream(blockLogDir, "[Send-Tx]results");
+            sendTxThread = new Thread(createSendTask());
+            sendTxThread.setDaemon(true);
+            sendTxThread.start();
+        }
     }
 
     private Runnable createSendTask() {
