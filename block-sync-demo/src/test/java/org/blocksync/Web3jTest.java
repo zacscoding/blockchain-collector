@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import org.blocksync.entity.Node;
 import org.blocksync.util.GsonUtil;
 import org.junit.Before;
@@ -28,6 +29,12 @@ import org.web3j.protocol.http.HttpService;
  */
 public class Web3jTest {
     List<Node> nodes;
+
+    @Test
+    public void test2() {
+        BigInteger value = BigInteger.valueOf(new Random().nextInt(1000000));
+        System.out.println(value.toString(16));
+    }
 
     // 3220171
     @Before

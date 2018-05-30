@@ -38,18 +38,26 @@ public class SendTxService {
 
     @Value("${task.send.tx}")
     private boolean sendTask;
+    @Value("${task.send.tx.nodename}")
+    private String nodeName;
+    private Node node;
 
     @PostConstruct
     private void setUp() {
         if(sendTask) {
-            nodes = parityNodeManager.getNodes();
+            node = parityNodeManager.getNodeFromName(nodeName);
             addrs = Arrays.asList(
-                new Pair<>("0x000e1f8e17224e00e7179a3235d431684758250e", "zac1"),
-                new Pair<>("0x00e5dc96b57f4f185296346b03b6d8d70ec56b5d", "zac2"),
-                new Pair<>("0x00ef1bdc7b0392b4fa529c1f0f0902a3ac3b1a73", "zac3"),
-                new Pair<>("0x00e0fcd57c93639ca311217bc107a93b3c4dc4a9", "zac4")
+                new Pair<>("0x00d695cd9b0ff4edc8ce55b493aec495b597e235", "user1"),
+                new Pair<>("0x001ca0bb54fcc1d736ccd820f14316dedaafd772", "user2"),
+                new Pair<>("0x00cb25f6fd16a52e24edd2c8fd62071dc29a035c", "user3"),
+                new Pair<>("0x0046f91449e4b696d48c9dd10703cb589649c265", "user4"),
+                new Pair<>("0x00cc5a03e7166baa2df1d449430581d92abb0a1e", "user5"),
+                new Pair<>("0x0095e961b3a00f882326bbc8f0a469e5b56e858a", "user6"),
+                new Pair<>("0x0008fba8d298de8f6ea7385d447f4d3252dc0880", "user7"),
+                new Pair<>("0x0094bc2c3b585928dfeaf85e96ba57773c0673c1", "user8"),
+                new Pair<>("0x0002851146112cef5d360033758c470689b72ea7", "user9"),
+                new Pair<>("0x002227d6a35ed31076546159061bd5d3fefe9f0a", "user10")
             );
-
             ps = PrintStreamFactory.getPrintStream(blockLogDir, "[Send-Tx]results");
             sendTxThread = new Thread(createSendTask());
             sendTxThread.setDaemon(true);
@@ -62,7 +70,6 @@ public class SendTxService {
             while(!Thread.currentThread().isInterrupted()) {
                 try {
                     Pair<Integer, Integer> indices = getDiffIdx();
-                    Node node = nodes.get(new Random().nextInt(nodes.size()));
                     Admin web3j = Admin.build(new HttpService(node.getUrl()));
                     BigInteger value = BigInteger.valueOf(new Random().nextInt(1000000));
                     String from = addrs.get(indices.getFirst()).getFirst();

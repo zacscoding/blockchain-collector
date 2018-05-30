@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.blocksync.handler.BlockEventHandler;
 import org.blocksync.handler.CheckBlockHashEventHandler;
+import org.blocksync.handler.CheckHashesEventHandler;
 import org.blocksync.handler.DisplayBlockMinerHandler;
 import org.blocksync.handler.DumpEventHandler;
 import org.blocksync.handler.PendingManageEventHandler;
@@ -52,6 +53,9 @@ public class BlockHandlerConfiguration {
     @Value("${handler.sync.pending}")
     private boolean syncPending;
 
+    @Value("${handler.compare.hash}")
+    private boolean compareHash;
+
     @Bean
     public List<BlockEventHandler> blockEventHandlers() {
         List<BlockEventHandler> eventHandlers = new ArrayList<>();
@@ -61,6 +65,7 @@ public class BlockHandlerConfiguration {
         log.info("## Sync Block : {}", syncBlock);
         log.info("## Check same hash : {}", checkSameHash);
         log.info("## Sync Pending Transaction : {}", syncPending);
+        log.info("## Compare hash between two chain : {}", compareHash);
 
         ParityNodeManager parityNodeManager = context.getBean(ParityNodeManager.class);
 
@@ -82,6 +87,10 @@ public class BlockHandlerConfiguration {
 
         if(checkSameHash) {
             eventHandlers.add(new CheckBlockHashEventHandler(blockLogDir, parityNodeManager));
+        }
+
+        if(compareHash) {
+            eventHandlers.add(new CheckHashesEventHandler(blockLogDir, parityNodeManager));
         }
 
         if (eventHandlers.isEmpty()) {
