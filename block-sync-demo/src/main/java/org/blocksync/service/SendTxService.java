@@ -2,6 +2,7 @@ package org.blocksync.service;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,7 @@ import org.web3j.protocol.http.HttpService;
 @Service
 public class SendTxService {
 
+    private Random random = new Random();
     private List<Node> nodes;
     private List<Pair<String, String>> addrs;
     private Thread sendTxThread;
@@ -38,14 +40,16 @@ public class SendTxService {
 
     @Value("${task.send.tx}")
     private boolean sendTask;
-    @Value("${task.send.tx.nodename}")
-    private String nodeName;
-    private Node node;
+    @Value("${task.send.tx.sleep.bound}")
+    private int sleepBound;
+    @Value("${task.send.tx.nodename}'.split(',')}")
+    private List<String> nodeNames;
+
 
     @PostConstruct
     private void setUp() {
         if(sendTask) {
-            node = parityNodeManager.getNodeFromName(nodeName);
+            initNodes();
             addrs = Arrays.asList(
                 new Pair<>("0x00d695cd9b0ff4edc8ce55b493aec495b597e235", "user1"),
                 new Pair<>("0x001ca0bb54fcc1d736ccd820f14316dedaafd772", "user2"),
@@ -70,7 +74,6 @@ public class SendTxService {
             while(!Thread.currentThread().isInterrupted()) {
                 try {
                     Pair<Integer, Integer> indices = getDiffIdx();
-                    Admin web3j = Admin.build(new HttpService(node.getUrl()));
                     BigInteger value = BigInteger.valueOf(new Random().nextInt(1000000));
                     String from = addrs.get(indices.getFirst()).getFirst();
                     String to = addrs.get(indices.getSecond()).getFirst();
@@ -83,9 +86,19 @@ public class SendTxService {
                         value,
                         null
                     );
-                    String hash = web3j.personalSendTransaction(tx,addrs.get(indices.getFirst()).getSecond()).send().getTransactionHash();
-                    ps.println("#Send tx from : " + from + ", to : " + to + ", value : " + value + " ==> hash : " + hash);
-                    Thread.sleep(new Random().nextInt(10000));
+
+                    for(String nodeName : nodeNames) {
+                        Node node = parityNodeManager.getNodeFromName(nodeName);
+
+                        if(node == null) {
+                            continue;
+                        }
+
+                        Admin web3j = Admin.build(new HttpService(node.getUrl()));
+                        String hash = web3j.personalSendTransaction(tx,addrs.get(indices.getFirst()).getSecond()).send().getTransactionHash();
+                        ps.println("#Send tx from : " + from + ", to : " + to + ", value : " + value + " ==> hash : " + hash);
+                    }
+                    Thread.sleep(random.nextInt(sleepBound));
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -102,5 +115,15 @@ public class SendTxService {
         } while (toIdx != -1 && toIdx == fromIdx);
 
         return new Pair<>(fromIdx, toIdx);
+    }
+
+    private void initNodes() {
+        nodes = new ArrayList<>();
+        for (String nodeName : nodeNames) {
+            Node node = parityNodeManager.getNodeFromName(nodeName);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
     }
 }
