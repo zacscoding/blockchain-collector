@@ -1,5 +1,6 @@
 package org.blocksync.service;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -59,9 +60,11 @@ public class SendTxService {
                 new Pair<>("0x002227d6a35ed31076546159061bd5d3fefe9f0a", "user10")
             );
             ps = PrintStreamFactory.getPrintStream(blockLogDir, "[Send-Tx]results");
-            sendTxThread = new Thread(createSendTask());
-            sendTxThread.setDaemon(true);
-            sendTxThread.start();
+            for(int i=0; i<5; i++) {
+                Thread t = new Thread(createSendTask());
+                t.setDaemon(true);
+                t.start();
+            }
         }
     }
 
@@ -85,8 +88,8 @@ public class SendTxService {
                     );
                     String hash = web3j.personalSendTransaction(tx,addrs.get(indices.getFirst()).getSecond()).send().getTransactionHash();
                     ps.println("#Send tx from : " + from + ", to : " + to + ", value : " + value + " ==> hash : " + hash);
-                    Thread.sleep(new Random().nextInt(10000));
-                } catch(Exception e) {
+                    /*Thread.sleep(new Random().nextInt(10000));*/
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
             }

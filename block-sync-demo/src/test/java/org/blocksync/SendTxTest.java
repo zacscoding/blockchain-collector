@@ -66,7 +66,8 @@ public class SendTxTest {
                     );
                     String hash = web3j.personalSendTransaction(tx,addrs.get(indices.getFirst()).getSecond()).send().getTransactionHash();
                     System.out.println(hash);
-                    Thread.sleep(new Random().nextInt(100));
+                    //Thread.sleep(new Random().nextInt(100));
+                    Thread.sleep(new Random().nextInt(10));
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
