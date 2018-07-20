@@ -120,6 +120,7 @@ public class SendTxTest {
                         nonce = nonce.add(BigInteger.ONE);
                     }
                     Thread.sleep(5L);
+
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

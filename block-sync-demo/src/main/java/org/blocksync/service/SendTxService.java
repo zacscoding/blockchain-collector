@@ -10,11 +10,13 @@ import javax.annotation.PostConstruct;
 import org.blocksync.entity.Node;
 import org.blocksync.entity.Pair;
 import org.blocksync.factory.PrintStreamFactory;
-import org.blocksync.manager.NodeManager;
 import org.blocksync.manager.ParityNodeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.web3j.protocol.Web3j;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.http.HttpService;
@@ -27,10 +29,11 @@ import org.web3j.protocol.http.HttpService;
 @Service
 public class SendTxService {
 
+    private static final Logger logger = LoggerFactory.getLogger(SendTxService.class);
+
     private Random random = new Random();
     private List<Node> nodes;
     private List<Pair<String, String>> addrs;
-    private Thread sendTxThread;
     private PrintStream ps;
 
     @Autowired
@@ -42,12 +45,14 @@ public class SendTxService {
     private boolean sendTask;
     @Value("${task.send.tx.sleep.bound}")
     private int sleepBound;
-    @Value("${task.send.tx.nodename}'.split(',')}")
+    @Value("#{'${task.send.tx.nodename}'.split(',')}")
     private List<String> nodeNames;
 
 
     @PostConstruct
     private void setUp() {
+        logger.info("## Send Transaction : {}", sendTask);
+
         if(sendTask) {
             initNodes();
             addrs = Arrays.asList(
@@ -63,14 +68,17 @@ public class SendTxService {
                 new Pair<>("0x002227d6a35ed31076546159061bd5d3fefe9f0a", "user10")
             );
             ps = PrintStreamFactory.getPrintStream(blockLogDir, "[Send-Tx]results");
-            sendTxThread = new Thread(createSendTask());
-            sendTxThread.setDaemon(true);
-            sendTxThread.start();
+            for(int i=0; i<5; i++) {
+                Thread t = new Thread(createSendTask());
+                t.setDaemon(true);
+                t.start();
+            }
         }
     }
 
     private Runnable createSendTask() {
         return () -> {
+            int txCount = 0;
             while(!Thread.currentThread().isInterrupted()) {
                 try {
                     Pair<Integer, Integer> indices = getDiffIdx();
@@ -80,8 +88,8 @@ public class SendTxService {
                     Transaction tx = new Transaction(
                         from,
                         null,
-                        null,
-                        null,
+                        BigInteger.ZERO,
+                        new BigInteger("21000"),
                         to,
                         value,
                         null
@@ -100,7 +108,15 @@ public class SendTxService {
                     }
                     Thread.sleep(random.nextInt(sleepBound));
                 } catch(Exception e) {
+                    if (e instanceof InterruptedException) {
+                        return;
+                    }
+
                     e.printStackTrace();
+                }
+                txCount++;
+                if(txCount == 50) {
+                    break;
                 }
             }
         };
