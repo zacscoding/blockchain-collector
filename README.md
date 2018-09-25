@@ -1,10 +1,2 @@
-# Block Event Subscribe and Handle
+## Blockchain Observer + Message Queue  
 
-### Setting properties  
-```
-resources/application.properties  
-```
-
-### Add Handlers  
-
-> org.blocksync.configuration.BlockHandlerConfiguration

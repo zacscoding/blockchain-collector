@@ -1,0 +1,32 @@
+{
+  "networks": [
+    {
+      "blockchainType": "ethereum",
+      "blockTime": 10000,
+      "blockchainNodes": [
+        {
+          "nodeName": "Parity-1",
+          "rpc": {
+            "type": "json",
+            "url": "http://192.168.5.77:8540/"
+          },
+          "subscribe": {
+            "block": true,
+            "pendingTx": true
+          }
+        },
+        {
+          "nodeName": "Parity-2",
+          "rpc": {
+            "type": "websocket",
+            "url": "http://192.168.5.77:9541/"
+          },
+          "subscribe": {
+            "block": true,
+            "pendingTx": true
+          }
+        }
+      ]
+    }
+  ]
+}
