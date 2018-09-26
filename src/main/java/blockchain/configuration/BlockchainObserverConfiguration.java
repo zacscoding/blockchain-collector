@@ -1,16 +1,20 @@
 package blockchain.configuration;
 
+import blockchain.message.EthereumMessageProducer;
 import blockchain.model.BlockchainNode;
 import blockchain.model.enums.BlockchainType;
-import blockchain.observer.SubscribeManager;
+import blockchain.observe.SubscribeManager;
+import blockchain.observe.listener.EthereumListener;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +41,11 @@ public class BlockchainObserverConfiguration {
         initialize();
     }
 
+    @Bean
+    public List<EthereumListener> ethereumListeners() {
+        return Arrays.asList(new EthereumMessageProducer());
+    }
+
     private void initialize() {
         readBlockchainNodes();
         subscribeBlockchainNodes();
@@ -44,11 +53,7 @@ public class BlockchainObserverConfiguration {
 
     private void subscribeBlockchainNodes() {
         for (BlockchainNode blockchainNode : blockchainNodes) {
-            switch (blockchainNode.getBlockchainType()) {
-                case ETHEREUM:
-
-                    break;
-            }
+            subscribeManager.subscribe(blockchainNode);
         }
     }
 
