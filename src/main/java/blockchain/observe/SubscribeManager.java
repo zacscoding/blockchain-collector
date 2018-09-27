@@ -2,11 +2,14 @@ package blockchain.observe;
 
 import blockchain.model.BlockchainNode;
 import blockchain.model.BlockchainNode.Subscribe;
+import blockchain.model.enums.BlockchainType;
+import blockchain.observe.listener.BlockchainListener;
 import blockchain.observe.listener.EthereumListener;
 import blockchain.rpc.RpcServiceManager;
 import blockchain.rpc.RpcServices;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,15 +26,25 @@ import org.web3j.protocol.Web3j;
 @Component
 public class SubscribeManager {
 
-    private List<EthereumListener> ethereumListeners;
+    private List<BlockchainNode> blockchainNodes;
+    private BlockchainListener blockchainListener;
     private RpcServiceManager rpcServiceManager;
     private TaskExecutor taskExecutor;
 
     @Autowired
-    public SubscribeManager(List<EthereumListener> ethereumListeners, RpcServiceManager rpcServiceManager, @Qualifier("eventHandlerExecutor") TaskExecutor taskExecutor) {
-        this.ethereumListeners = ethereumListeners;
+    public SubscribeManager(List<BlockchainNode> blockchainNodes, BlockchainListener blockchainListener, RpcServiceManager rpcServiceManager,
+        @Qualifier("eventHandlerExecutor") TaskExecutor taskExecutor) {
+        this.blockchainNodes = blockchainNodes;
+        this.blockchainListener = blockchainListener;
         this.rpcServiceManager = rpcServiceManager;
         this.taskExecutor = taskExecutor;
+    }
+
+    @PostConstruct
+    private void setUp() {
+        for (BlockchainNode blockchainNode : blockchainNodes) {
+            subscribe(blockchainNode);
+        }
     }
 
     public void subscribe(BlockchainNode blockchainNode) {
@@ -47,6 +60,11 @@ public class SubscribeManager {
     }
 
     private void subscribeEthereum(BlockchainNode blockchainNode) {
+        if (!blockchainListener.hasListeners(BlockchainType.ETHEREUM)) {
+            return;
+        }
+
+        List<EthereumListener> ethereumListeners = blockchainListener.getEthereumListeners();
         Subscribe subscribe = blockchainNode.getSubscribe();
         boolean isSubscribe = subscribe.isBlock() || subscribe.isPendingTx();
 

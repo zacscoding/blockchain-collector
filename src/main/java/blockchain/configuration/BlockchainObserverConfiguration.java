@@ -3,7 +3,7 @@ package blockchain.configuration;
 import blockchain.message.EthereumMessageProducer;
 import blockchain.model.BlockchainNode;
 import blockchain.model.enums.BlockchainType;
-import blockchain.observe.SubscribeManager;
+import blockchain.observe.listener.BlockchainListener;
 import blockchain.observe.listener.EthereumListener;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,9 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -28,36 +26,18 @@ import org.springframework.util.CollectionUtils;
 @Configuration
 public class BlockchainObserverConfiguration {
 
-    private List<BlockchainNode> blockchainNodes;
-    private SubscribeManager subscribeManager;
-
-    @Autowired
-    public BlockchainObserverConfiguration(SubscribeManager subscribeManager) {
-        this.subscribeManager = subscribeManager;
-    }
-
-    @PostConstruct
-    private void setUp() {
-        initialize();
+    @Bean
+    public BlockchainListener blockchainListener() {
+        List<EthereumListener> ethereumListeners = Arrays.asList(new EthereumMessageProducer());
+        return new BlockchainListener(ethereumListeners);
     }
 
     @Bean
-    public List<EthereumListener> ethereumListeners() {
-        return Arrays.asList(new EthereumMessageProducer());
+    public List<BlockchainNode> blockchainNodes() {
+        return readBlockchainNodes();
     }
 
-    private void initialize() {
-        readBlockchainNodes();
-        subscribeBlockchainNodes();
-    }
-
-    private void subscribeBlockchainNodes() {
-        for (BlockchainNode blockchainNode : blockchainNodes) {
-            subscribeManager.subscribe(blockchainNode);
-        }
-    }
-
-    private void readBlockchainNodes() {
+    private List<BlockchainNode> readBlockchainNodes() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = null;
@@ -78,13 +58,13 @@ public class BlockchainObserverConfiguration {
                 throw new Exception("Networks value must be array");
             }
 
-            blockchainNodes = new ArrayList<>();
+            List<BlockchainNode> blockchainNodes = new ArrayList<>();
 
             for (JsonNode networkNode : networksJsonNode) {
                 BlockchainType blockchainType = BlockchainType.getType(networkNode.get("blockchainType").asText());
                 switch (blockchainType) {
                     case ETHEREUM:
-                        readEthereumNodes(objectMapper, networkNode);
+                        readEthereumNodes(blockchainNodes, objectMapper, networkNode);
                         break;
                     case BITCOIN:
                         throw new UnsupportedOperationException("Not supported yet bitcoin node");
@@ -97,20 +77,22 @@ public class BlockchainObserverConfiguration {
             if (CollectionUtils.isEmpty(blockchainNodes)) {
                 throw new RuntimeException("Empty blockchain observer.. : " + configFile);
             }
+
+            return blockchainNodes;
         } catch (Exception e) {
             log.warn("Failed to read observe.json file", e);
             throw new RuntimeException(e);
         }
     }
 
-    private void readEthereumNodes(ObjectMapper objectMapper, JsonNode ethereumNodes) throws Exception {
+    private void readEthereumNodes(List<BlockchainNode> blockchainNodes, ObjectMapper objectMapper, JsonNode ethereumNodes) throws Exception {
         long blockTime = ethereumNodes.get("blockTime").asLong();
 
         for (JsonNode ethereumNode : ethereumNodes.get("blockchainNodes")) {
 
             BlockchainNode blockchainNode = objectMapper.treeToValue(ethereumNode, BlockchainNode.class);
 
-            if (isDuplicateNodeName(blockchainNode.getNodeName())) {
+            if (isDuplicateNodeName(blockchainNodes, blockchainNode.getNodeName())) {
                 throw new Exception("Duplicate node name : " + blockchainNode.getNodeName());
             }
 
@@ -124,7 +106,7 @@ public class BlockchainObserverConfiguration {
         }
     }
 
-    private boolean isDuplicateNodeName(String nodeName) {
+    private boolean isDuplicateNodeName(List<BlockchainNode> blockchainNodes, String nodeName) {
         for (BlockchainNode blockchainNode : blockchainNodes) {
             if (blockchainNode.getNodeName().equalsIgnoreCase(nodeName)) {
                 return true;
