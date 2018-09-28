@@ -1,6 +1,10 @@
 package blockchain.util;
 
 /**
+ * OSUtil class
+ * - Check os type
+ * - Check line separator
+ *
  * @author zacconding
  * @Date 2018-09-26
  * @GitHub : https://github.com/zacscoding

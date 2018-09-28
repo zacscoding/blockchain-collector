@@ -9,6 +9,10 @@ import blockchain.rpc.RpcServiceManager;
 import blockchain.rpc.RpcServices;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,8 @@ import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 
 /**
+ * Blockchain subscribe manager
+ *
  * @author zacconding
  * @Date 2018-09-26
  * @GitHub : https://github.com/zacscoding
@@ -47,6 +53,9 @@ public class SubscribeManager {
         }
     }
 
+    /**
+     * Subscribe blockchain events
+     */
     public void subscribe(BlockchainNode blockchainNode) {
         Objects.requireNonNull(blockchainNode, "blockchainNode must be not null");
 
@@ -59,6 +68,10 @@ public class SubscribeManager {
         }
     }
 
+    /**
+     * Subscribe ethereum events
+     * =>  blocks, pending transactions
+     */
     private void subscribeEthereum(BlockchainNode blockchainNode) {
         if (!blockchainListener.hasListeners(BlockchainType.ETHEREUM)) {
             return;
@@ -73,10 +86,9 @@ public class SubscribeManager {
         }
 
         RpcServices rpcServices = rpcServiceManager.getRpcServices(blockchainNode);
-        Web3j web3j = rpcServices.getWeb3j();
 
         if (subscribe.isBlock()) {
-            web3j.blockObservable(true).subscribe(onNext -> {
+            rpcServices.getDefaultWeb3j().blockObservable(true).subscribe(onNext -> {
                 ethereumListeners.forEach(listener -> taskExecutor.execute(() -> listener.onBlock(blockchainNode, onNext.getBlock())));
             }, (onError -> {
                 log.warn("Failed to subscribe block.. " + onError);
@@ -85,10 +97,11 @@ public class SubscribeManager {
         }
 
         if (subscribe.isPendingTx()) {
-            web3j.pendingTransactionObservable().subscribe(onNext -> {
+            rpcServices.getShortPollingWeb3j().pendingTransactionObservable().subscribe(onNext -> {
                 ethereumListeners.forEach(listener -> taskExecutor.execute(() -> listener.onPendingTransaction(blockchainNode, onNext)));
             }, onError -> {
                 log.warn("Failed to subscribe pending tx... ", onError);
+                // TODO :: handle error
             });
         }
     }

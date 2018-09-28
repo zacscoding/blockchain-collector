@@ -4,9 +4,11 @@ import blockchain.model.BlockchainNode;
 import blockchain.model.BlockchainNode.Rpc;
 import blockchain.model.enums.BlockchainType;
 import blockchain.model.enums.RpcType;
+import blockchain.util.Async;
 import blockchain.util.OSUtil;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -19,6 +21,8 @@ import org.web3j.protocol.websocket.WebSocketClient;
 import org.web3j.protocol.websocket.WebSocketService;
 
 /**
+ * RpcServices manager
+ *
  * @author zacconding
  * @Date 2018-09-26
  * @GitHub : https://github.com/zacscoding
@@ -92,7 +96,10 @@ public class RpcServiceManager {
         }
 
         rpcServices.setWeb3jService(web3jService);
-        rpcServices.setWeb3j(Web3j.build(web3jService));
+        // Web3j for block observe
+        rpcServices.setDefaultWeb3j(Web3j.build(web3jService, blockchainNode.getBlockTime(), Async.defaultExecutorService()));
+        // Web3j for pending tx observe
+        rpcServices.setShortPollingWeb3j(Web3j.build(web3jService, 500L, Async.executorService(Executors.newSingleThreadScheduledExecutor())));
 
         return rpcServices;
     }

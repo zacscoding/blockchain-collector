@@ -2,13 +2,13 @@
   "networks": [
     {
       "blockchainType": "ethereum",
-      "blockTime": 10000,
+      "blockTime": 5000,
       "blockchainNodes": [
         {
           "nodeName": "Parity-1",
           "rpc": {
             "type": "json",
-            "url": "http://192.168.5.77:8540/"
+            "url": "http://192.168.79.128:8540/"
           },
           "subscribe": {
             "block": true,

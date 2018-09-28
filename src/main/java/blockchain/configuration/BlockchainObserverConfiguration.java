@@ -1,6 +1,7 @@
 package blockchain.configuration;
 
 import blockchain.message.EthereumMessageProducer;
+import blockchain.message.MessageProducer;
 import blockchain.model.BlockchainNode;
 import blockchain.model.enums.BlockchainType;
 import blockchain.observe.listener.BlockchainListener;
@@ -18,6 +19,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * Blockchain observer configuration
+ *
  * @author zacconding
  * @Date 2018-09-26
  * @GitHub : https://github.com/zacscoding
@@ -27,8 +30,9 @@ import org.springframework.util.CollectionUtils;
 public class BlockchainObserverConfiguration {
 
     @Bean
-    public BlockchainListener blockchainListener() {
-        List<EthereumListener> ethereumListeners = Arrays.asList(new EthereumMessageProducer());
+    public BlockchainListener blockchainListener(MessageProducer messageProducer) {
+        // can add listeners at here
+        List<EthereumListener> ethereumListeners = Arrays.asList(new EthereumMessageProducer(messageProducer));
         return new BlockchainListener(ethereumListeners);
     }
 
@@ -37,6 +41,9 @@ public class BlockchainObserverConfiguration {
         return readBlockchainNodes();
     }
 
+    /**
+     * Read observer-config.json file and Parse to BlockchainNode
+     */
     private List<BlockchainNode> readBlockchainNodes() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -85,6 +92,9 @@ public class BlockchainObserverConfiguration {
         }
     }
 
+    /**
+     * Read ethereum nodes
+     */
     private void readEthereumNodes(List<BlockchainNode> blockchainNodes, ObjectMapper objectMapper, JsonNode ethereumNodes) throws Exception {
         long blockTime = ethereumNodes.get("blockTime").asLong();
 
@@ -106,6 +116,9 @@ public class BlockchainObserverConfiguration {
         }
     }
 
+    /**
+     * Check duplicate blockchain node name
+     */
     private boolean isDuplicateNodeName(List<BlockchainNode> blockchainNodes, String nodeName) {
         for (BlockchainNode blockchainNode : blockchainNodes) {
             if (blockchainNode.getNodeName().equalsIgnoreCase(nodeName)) {

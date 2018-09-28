@@ -8,6 +8,10 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
 
 /**
+ * RpcService model
+ * - Ethereum rpc services
+ *  - Web3j
+ *  - Web3jService
  * @author zacconding
  * @Date 2018-09-26
  * @GitHub : https://github.com/zacscoding
@@ -20,7 +24,8 @@ public class RpcServices {
     private BlockchainType blockchainType;
 
     // tag : ethereum
-    private Web3j web3j;
+    private Web3j defaultWeb3j;
+    private Web3j shortPollingWeb3j;
     private Web3jService web3jService;
     // -- tag : ethereum
 }
