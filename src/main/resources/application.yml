@@ -1,0 +1,26 @@
+# Blockchain node infos
+nodes:
+  eth:
+    networks:
+      -
+        networkName: Private
+        blockTime: 5000
+        nodes:
+          -
+           nodeName: Node01
+           httpUrl: http://192.168.79.128:8540/
+           ipcPath:
+           webSocketUrl:
+          -
+            nodeName: Node02
+            httpUrl:
+            ipcPath:
+            webSocketUrl: ws://192.168.79.128:8451
+
+# logging
+logging:
+  level:
+    properties: debug
+    observer: debug
+    rpc: debug
+    publisher: debug
