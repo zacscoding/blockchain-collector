@@ -1,30 +1,35 @@
 package collector.ethereum.observer;
 
-import collector.configuration.EthereumProperties;
 import collector.ethereum.EthereumNetwork;
 import collector.ethereum.EthereumNode;
-import collector.ethereum.rpc.EthereumRpcServiceManager;
+import collector.ethereum.configuration.EthereumConfiguration;
+import collector.ethereum.configuration.properties.EthereumProperties;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumPendingTxEvent;
 import collector.ethereum.event.publisher.EthereumBlockPublisher;
 import collector.ethereum.event.publisher.EthereumPendingTxPublisher;
+import collector.ethereum.rpc.EthereumRpcServiceManager;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
 import org.web3j.protocol.core.methods.response.Transaction;
 
 /**
+ * Register eth events filters and then publish events
+ *
  * @author zacconding
  * @Date 2018-12-19
  * @GitHub : https://github.com/zacscoding
  */
 @Slf4j(topic = "observer")
 @Component
+@ConditionalOnBean(value = EthereumConfiguration.class)
 public class EthereumObserver {
 
     private EthereumProperties ethProperties;
@@ -44,13 +49,13 @@ public class EthereumObserver {
 
     @PostConstruct
     private void setUp() {
-        startObserve();
+        startEthereumFilters();
     }
 
     /**
      * Start block filter + pending tx filter
      */
-    private void startObserve() {
+    private void startEthereumFilters() {
         List<EthereumNetwork> networks = ethProperties.getNetworks();
         if (CollectionUtils.isEmpty(networks)) {
             log.info("## Skip ethereum observer because empty ethereum networks");

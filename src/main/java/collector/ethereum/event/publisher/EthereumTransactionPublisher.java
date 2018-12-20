@@ -1,5 +1,6 @@
 package collector.ethereum.event.publisher;
 
+import collector.ethereum.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumTxEvent;
 import collector.util.CollectorThreadFactory;
 import com.google.common.eventbus.AsyncEventBus;
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j(topic = "publisher")
 @Component
+@ConditionalOnBean(value = EthereumConfiguration.class)
 public class EthereumTransactionPublisher {
 
     private EventBus asyncEventBus;

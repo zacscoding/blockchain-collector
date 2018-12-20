@@ -27,4 +27,10 @@ public class EthereumBlockEvent extends EthereumEvent {
         this.ethereumNode = ethereumNode;
         this.block = block;
     }
+
+    @Override
+    public String toSimpleString() {
+        return String.format("network : %s / node : %s / block : %s[%s]"
+            , networkName, ethereumNode.getNodeName(), block.getNumber(), block.getHash());
+    }
 }

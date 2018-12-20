@@ -9,6 +9,8 @@ public abstract class EthereumEvent {
 
     protected final EthereumEventType eventType;
 
+    public abstract String toSimpleString();
+
     public EthereumEvent(EthereumEventType eventType) {
         this.eventType = eventType;
     }

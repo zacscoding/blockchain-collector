@@ -24,4 +24,10 @@ public class EthereumPendingTxEvent extends EthereumEvent {
         this.nodeName = nodeName;
         this.pendingTx = pendingTx;
     }
+
+    @Override
+    public String toSimpleString() {
+        return String.format("network : %s / node : %s / hash : %s"
+            , networkName, nodeName, pendingTx.getHash());
+    }
 }

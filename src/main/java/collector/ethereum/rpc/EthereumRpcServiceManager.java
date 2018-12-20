@@ -1,6 +1,7 @@
 package collector.ethereum.rpc;
 
 import collector.ethereum.EthereumNode;
+import collector.ethereum.configuration.EthereumConfiguration;
 import collector.util.OSUtil;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -30,11 +32,10 @@ import org.web3j.utils.Async;
  * Ethereum rpc service manager
  *
  * @author zacconding
- * @Date 2018-12-19
- * @GitHub : https://github.com/zacscoding
  */
 @Slf4j(topic = "rpc")
 @Component
+@ConditionalOnBean(value = EthereumConfiguration.class)
 public class EthereumRpcServiceManager {
 
     private final Object lock = new Object();
@@ -99,7 +100,6 @@ public class EthereumRpcServiceManager {
         Assert.isTrue(blockTime > 0L, "blockTime must be larger than 0");
         Assert.isTrue(pollingInterval > 0L, "pollingInterval must be larger than 0");
 
-
         PendingTransactionFilter pendingTxFilter = pendingTxFilterMap.get(ethereumNode.getNodeName());
 
         if (pendingTxFilter != null) {
@@ -137,7 +137,7 @@ public class EthereumRpcServiceManager {
     public boolean cancelPendingTxFilter(EthereumNode ethereumNode) {
         PendingTransactionFilter filter = pendingTxFilterMap.remove(ethereumNode.getNodeName());
 
-        if(filter == null) {
+        if (filter == null) {
             return false;
         }
 

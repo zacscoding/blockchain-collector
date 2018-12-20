@@ -33,15 +33,18 @@
         <appender-ref ref="FILE"/>
     </appender>
 
-    <root level="info">
+    <root level="WARN">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ASYNC"/>
     </root>
 
-    <logger name="properties" level="DEBUG" />
-    <logger name="observer" level="DEBUG" />
-    <logger name="rpc" level="DEBUG" />
-    <logger name="publisher" level="DEBUG" />
-    <logger name="listener" level="DEBUG" />
+    <logger name="properties" level="DEBUG"/>
+    <logger name="config" level="DEBUG"/>
+    <logger name="observer" level="DEBUG"/>
+    <logger name="rpc" level="DEBUG"/>
+    <logger name="publisher" level="DEBUG"/>
+    <logger name="listener" level="DEBUG"/>
+    <logger name="message" level="DEBUG"/>
+
 
 </configuration>

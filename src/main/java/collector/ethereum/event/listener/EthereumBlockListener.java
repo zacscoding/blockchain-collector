@@ -1,14 +1,18 @@
 package collector.ethereum.event.listener;
 
+import collector.ethereum.EthereumNode;
+import collector.ethereum.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumTxEvent;
 import collector.ethereum.event.publisher.EthereumBlockPublisher;
 import collector.ethereum.event.publisher.EthereumTransactionPublisher;
+import collector.ethereum.message.EthereumKafkaProducer;
 import collector.ethereum.rpc.EthereumRpcServiceManager;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.web3j.protocol.Web3j;
@@ -18,21 +22,23 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 /**
  * @author zacconding
- * @Date 2018-12-20
- * @GitHub : https://github.com/zacscoding
  */
 @Slf4j(topic = "listener")
 @Component
+@ConditionalOnBean(value = EthereumConfiguration.class)
 public class EthereumBlockListener {
 
+    private EthereumKafkaProducer ethKafkaProducer;
     private EthereumRpcServiceManager rpcServiceManager;
     private EthereumTransactionPublisher ethTransactionPublisher;
 
     @Autowired
-    public EthereumBlockListener(EthereumBlockPublisher ethBlockPublisher,
+    public EthereumBlockListener(EthereumKafkaProducer ethKafkaProducer,
+        EthereumBlockPublisher ethBlockPublisher,
         EthereumTransactionPublisher ethTransactionPublisher,
         EthereumRpcServiceManager rpcServiceManager) {
 
+        this.ethKafkaProducer = ethKafkaProducer;
         this.ethTransactionPublisher = ethTransactionPublisher;
         this.rpcServiceManager = rpcServiceManager;
 
@@ -41,7 +47,9 @@ public class EthereumBlockListener {
     }
 
     /**
-     * Handle block event - produce block message - publish transaction + transaction receipt event
+     * Handle block event
+     * - produce block message
+     * - publish transaction + transaction receipt event
      */
     @Subscribe
     @AllowConcurrentEvents
@@ -57,14 +65,19 @@ public class EthereumBlockListener {
 
         Block block = blockEvent.getBlock();
 
-        // TODO :: produce kafka message
-
+        ethKafkaProducer.produceEthereumBlockMessage(blockEvent);
         if (CollectionUtils.isEmpty(block.getTransactions())) {
             return;
         }
 
         // publish transaction event
-        final Web3j web3j = rpcServiceManager.getOrCreateWeb3j(blockEvent.getEthereumNode(), blockEvent.getBlockTime());
+        publishTransactions(
+            block, blockEvent.getNetworkName(), blockEvent.getBlockTime(), blockEvent.getEthereumNode()
+        );
+    }
+
+    private void publishTransactions(Block block, String networkName, long blockTime, EthereumNode ethNode) {
+        final Web3j web3j = rpcServiceManager.getOrCreateWeb3j(ethNode, blockTime);
         block.getTransactions().forEach(transactionResult -> {
             try {
                 Transaction tx = (Transaction) transactionResult.get();
@@ -74,8 +87,9 @@ public class EthereumBlockListener {
                     .get();
 
                 EthereumTxEvent txEvent = new EthereumTxEvent();
-                txEvent.setNetworkName(blockEvent.getNetworkName());
-                txEvent.setEthereumNode(blockEvent.getEthereumNode());
+
+                txEvent.setNetworkName(networkName);
+                txEvent.setEthereumNode(ethNode);
                 txEvent.setTransaction(tx);
                 txEvent.setTransactionReceipt(tr);
 

@@ -2,8 +2,6 @@ package collector.util;
 
 /**
  * @author zacconding
- * @Date 2018-12-19
- * @GitHub : https://github.com/zacscoding
  */
 public class OSUtil {
 
@@ -12,9 +10,6 @@ public class OSUtil {
     private static OSType platform;
 
     private static String lineSeparator;
-
-    private OSUtil() {
-    }
 
     public enum OSType {
         Any("any"), Linux("Linux"), Mac_OS("Mac OS"), Mac_OS_X("Mac OS X"), Windows("Windows"),
@@ -150,5 +145,8 @@ public class OSUtil {
         }
 
         lineSeparator = System.getProperty("line.separator");
+    }
+
+    private OSUtil() {
     }
 }

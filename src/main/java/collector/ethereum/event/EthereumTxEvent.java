@@ -36,4 +36,10 @@ public class EthereumTxEvent extends EthereumEvent {
         this.transaction = transaction;
         this.transactionReceipt = transactionReceipt;
     }
+
+    @Override
+    public String toSimpleString() {
+        return String.format("network : %s / node : %s / tx : %s block : %s"
+            , networkName, ethereumNode.getNodeName(), transaction.getHash(), transaction.getBlockNumber());
+    }
 }

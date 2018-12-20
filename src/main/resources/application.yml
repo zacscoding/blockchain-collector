@@ -1,9 +1,29 @@
+# Enable blockchain
+blockchain:
+  eth:
+    # enable | disable ethereum collector
+    enabled: true
+
+# Kafka common
+kafka:
+  common:
+    bootstrap:
+      servers: 192.168.79.128:9092
+  eth:
+    topic:
+      # ethereum block event message topic
+      block: eth-block
+      # ethereum tx event message topic
+      tx: eth-tx
+      # ethereum pending tx event message topic
+      pendingTx: eth-pending-tx
+
 # Blockchain node infos
 nodes:
   eth:
     networks:
       - networkName: Private
-        blockTime: 5000
+        blockTime: 15000
         pendingTxPollingInterval: 1000
         nodes:
           - nodeName: Node01
