@@ -1,5 +1,6 @@
-package collector.event;
+package collector.ethereum.event;
 
+import collector.ethereum.EthereumNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
@@ -14,13 +15,16 @@ import org.web3j.protocol.core.methods.response.EthBlock.Block;
 public class EthereumBlockEvent extends EthereumEvent {
 
     private String networkName;
-    private String nodeName;
+    private long blockTime;
+    private EthereumNode ethereumNode;
     private Block block;
 
-    public EthereumBlockEvent(String networkName, String nodeName, Block block) {
+    public EthereumBlockEvent(String networkName, long blockTIme, EthereumNode ethereumNode, Block block) {
         super(EthereumEventType.BLOCK);
+
         this.networkName = networkName;
-        this.nodeName = nodeName;
+        this.blockTime = blockTIme;
+        this.ethereumNode = ethereumNode;
         this.block = block;
     }
 }

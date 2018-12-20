@@ -17,6 +17,8 @@ public class EthereumNetwork {
     private String networkName;
     // ethereum block time
     private long blockTime;
+    // ethereum pending tx polling time
+    private long pendingTxPollingInterval;
     // ethereum nodes
     private List<EthereumNode> nodes;
 }

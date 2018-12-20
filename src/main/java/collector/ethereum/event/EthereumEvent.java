@@ -1,4 +1,4 @@
-package collector.event;
+package collector.ethereum.event;
 
 /**
  * @author zacconding

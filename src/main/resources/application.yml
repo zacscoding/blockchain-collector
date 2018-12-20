@@ -2,25 +2,23 @@
 nodes:
   eth:
     networks:
-      -
-        networkName: Private
+      - networkName: Private
         blockTime: 5000
+        pendingTxPollingInterval: 1000
         nodes:
-          -
-           nodeName: Node01
-           httpUrl: http://192.168.79.128:8540/
-           ipcPath:
-           webSocketUrl:
-          -
-            nodeName: Node02
+          - nodeName: Node01
+            httpUrl: http://192.168.79.128:8540/
+            ipcPath:
+            webSocketUrl:
+          - nodeName: Node02
             httpUrl:
             ipcPath:
             webSocketUrl: ws://192.168.79.128:8451
 
 # logging
 logging:
-  level:
-    properties: debug
-    observer: debug
-    rpc: debug
-    publisher: debug
+  config: classpath:logback.xml
+
+# Server
+server:
+  port: 8080

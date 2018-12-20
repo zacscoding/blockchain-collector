@@ -24,12 +24,16 @@ public class EthereumProperties {
 
     List<EthereumNetwork> networks;
 
+    // TEMP FOR DEBUG
     @PostConstruct
     private void setUp() {
         try {
-            log.info("## Ethereum Properties ##\n{}", new ObjectMapper().writeValueAsString(networks));
+            log.info("## Ethereum Properties ##\n{}\n============================================",
+                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(networks)
+            );
         } catch (Exception e) {
 
         }
     }
+    // -- TEMP FOR DEBUG
 }
