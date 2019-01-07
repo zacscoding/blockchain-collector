@@ -1,0 +1,15 @@
+version: '2'
+services:
+  collector:
+    # restart: always
+    container_name: blockchain-collector
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    working_dir: /blockchain-collector
+    volumes:
+      - ../:/blockchain-collector
+      - ~/.m2:/root/.m2
+    command: mvn clean spring-boot:run
+    ports:
+      - "8080:8080"

@@ -2,6 +2,7 @@ package collector.ethereum.configuration;
 
 import collector.configuration.properties.KafkaProperties;
 import collector.ethereum.configuration.properties.EthereumKafkaProperties;
+import collector.util.GsonUtil;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,10 @@ public class EthereumKafkaConfiguration {
 
         this.kafkaProperties = kafkaProperties;
         this.ethKafkaProperties = ethKafkaProperties;
+
+        log.info("## eth kafka properties ===================================================");
+        log.debug(GsonUtil.toStringPretty(ethKafkaProperties));
+        log.info("=======================================================================");
     }
 
     @Bean

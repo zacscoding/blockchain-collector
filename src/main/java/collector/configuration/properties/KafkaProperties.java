@@ -1,5 +1,7 @@
 package collector.configuration.properties;
 
+import collector.util.GsonUtil;
+import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,13 @@ import org.springframework.stereotype.Component;
 public class KafkaProperties {
 
     private Bootstrap bootstrap;
+
+    @PostConstruct
+    private void setUp() {
+        log.info("## kafka properties ===================================================");
+        log.debug(GsonUtil.toStringPretty(this));
+        log.info("=======================================================================");
+    }
 
     @Getter
     @Setter

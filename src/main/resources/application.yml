@@ -30,10 +30,10 @@ nodes:
             httpUrl: http://192.168.79.128:8540/
             ipcPath:
             webSocketUrl:
-          - nodeName: Node02
-            httpUrl:
-            ipcPath:
-            webSocketUrl: ws://192.168.79.128:8451
+          #- nodeName: Node02
+           # httpUrl:
+            #ipcPath:
+            #webSocketUrl: ws://192.168.79.128:8451
 
 # logging
 logging:
