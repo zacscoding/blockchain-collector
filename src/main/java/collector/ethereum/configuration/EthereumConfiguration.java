@@ -19,11 +19,11 @@ public class EthereumConfiguration {
     @Autowired
     public EthereumConfiguration(EthereumProperties properties) {
         try {
-            log.info("## Ethereum Properties ##\n{}\n============================================",
+            logger.info("## Ethereum Properties ##\n{}\n============================================",
                 new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(properties.getNetworks())
             );
         } catch (Exception e) {
-            log.warn("Failed to parse ethereum properties : ", e);
+            logger.warn("Failed to parse ethereum properties : ", e);
         }
     }
     // -- TEMP FOR DEBUG

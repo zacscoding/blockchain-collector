@@ -89,13 +89,13 @@ public class EthereumKafkaProducer {
         result.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onFailure(Throwable throwable) {
-                log.warn("Failed to send message {}. reason : {}"
+                logger.warn("Failed to send message {}. reason : {}"
                     , event.toSimpleString(), throwable.getMessage());
             }
 
             @Override
             public void onSuccess(SendResult<String, String> sendResult) {
-                log.debug("Success to produce message : {}", event.toSimpleString());
+                logger.debug("Success to produce message : {}", event.toSimpleString());
             }
         });
     }

@@ -54,7 +54,7 @@ public class EthereumRpcServiceManager {
 
         final Web3j web3j = getOrCreateWeb3j(ethereumNode, blockTime);
         if (web3j == null) {
-            log.warn("Failed to register eth filter because can`t create web3j service");
+            logger.warn("Failed to register eth filter because can`t create web3j service");
             return false;
         }
 
@@ -63,13 +63,24 @@ public class EthereumRpcServiceManager {
                 Block block = web3j.ethGetBlockByHash(hash, true).send().getBlock();
                 onBlock.accept(block);
             } catch (IOException e) {
-                log.warn("Failed to get block by hash " + hash, e);
+                logger.warn("Failed to get block by hash " + hash, e);
             }
         });
 
         blockFilter.run(Executors.newSingleThreadScheduledExecutor(), blockTime);
         blockFilterMap.put(ethereumNode.getNodeName(), blockFilter);
         return true;
+    }
+
+    /**
+     * Checks whether started block filter or not
+     */
+    public boolean hasBlockFilter(EthereumNode ethereumNode) {
+        if (ethereumNode == null || ethereumNode.getNodeName() == null) {
+            return false;
+        }
+
+        return blockFilterMap.containsKey(ethereumNode.getNodeName());
     }
 
     /**
@@ -103,13 +114,13 @@ public class EthereumRpcServiceManager {
         PendingTransactionFilter pendingTxFilter = pendingTxFilterMap.get(ethereumNode.getNodeName());
 
         if (pendingTxFilter != null) {
-            log.warn("Already registered pending tx filter : {}", ethereumNode.getNodeName());
+            logger.warn("Already registered pending tx filter : {}", ethereumNode.getNodeName());
             return false;
         }
 
         final Web3j web3j = getOrCreateWeb3j(ethereumNode, blockTime);
         if (web3j == null) {
-            log.warn("Failed to register eth filter because can`t create web3j service");
+            logger.warn("Failed to register eth filter because can`t create web3j service");
             return false;
         }
 
@@ -119,7 +130,7 @@ public class EthereumRpcServiceManager {
                     tx -> onPendingTx.accept(tx)
                 );
             } catch (IOException e) {
-                log.warn("IOException occur while getting pending tx : " + hash, e);
+                logger.warn("IOException occur while getting pending tx : " + hash, e);
             }
         });
 
@@ -127,6 +138,17 @@ public class EthereumRpcServiceManager {
         pendingTxFilterMap.put(ethereumNode.getNodeName(), pendingTxFilter);
 
         return true;
+    }
+
+    /**
+     * Checks whether started pending tx filter or not
+     */
+    public boolean hasPendingTxFilter(EthereumNode ethereumNode) {
+        if (ethereumNode == null || ethereumNode.getNodeName() == null) {
+            return false;
+        }
+
+        return pendingTxFilterMap.containsKey(ethereumNode.getNodeName());
     }
 
     /**
@@ -175,7 +197,7 @@ public class EthereumRpcServiceManager {
             try {
                 return createWebSocketService(ethereumNode.getWebSocketUrl());
             } catch (ConnectException e) {
-                log.warn("Failed to connect " + ethereumNode.getWebSocketUrl());
+                logger.warn("Failed to connect " + ethereumNode.getWebSocketUrl());
                 return null;
             }
         }

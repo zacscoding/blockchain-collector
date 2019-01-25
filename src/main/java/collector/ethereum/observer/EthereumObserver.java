@@ -45,10 +45,7 @@ public class EthereumObserver {
         this.ethRpcServiceManager = ethRpcServiceManager;
         this.ethBlockPublisher = ethBlockPublisher;
         this.ethPendingTxPublisher = ethPendingTxPublisher;
-    }
 
-    @PostConstruct
-    private void setUp() {
         startEthereumFilters();
     }
 
@@ -58,7 +55,7 @@ public class EthereumObserver {
     private void startEthereumFilters() {
         List<EthereumNetwork> networks = ethProperties.getNetworks();
         if (CollectionUtils.isEmpty(networks)) {
-            log.info("## Skip ethereum observer because empty ethereum networks");
+            logger.info("## Skip ethereum observer because empty ethereum networks");
             return;
         }
 
@@ -66,23 +63,28 @@ public class EthereumObserver {
             List<EthereumNode> ethNodes = network.getNodes();
 
             if (CollectionUtils.isEmpty(ethNodes)) {
-                log.info("## Skip observe {} eth network. because empty nodes", network.getNetworkName());
+                logger.info("## Skip observe {} eth network. because empty nodes", network.getNetworkName());
                 continue;
             }
 
-            log.debug("## Start to observe {} ethereum network. block time : {} / # nodes : {}"
+            logger.debug("## Start to observe {} ethereum network. block time : {} / # nodes : {}"
                 , network.getNetworkName(), network.getBlockTime(), network.getNodes().size());
 
             for (EthereumNode ethNode : ethNodes) {
                 try {
-                    // block filter
-                    startBlockFilter(network.getNetworkName(), network.getBlockTime(), ethNode);
+                    boolean result = false;
+                    if (!ethRpcServiceManager.hasBlockFilter(ethNode)) {
+                        // block filter
+                        startBlockFilter(network.getNetworkName(), network.getBlockTime(), ethNode);
+                    }
 
-                    // pending tx observer
-                    startPendingTxFilter(network.getNetworkName(), network.getBlockTime(),
-                        network.getPendingTxPollingInterval(), ethNode);
+                    if (!ethRpcServiceManager.hasPendingTxFilter(ethNode)) {
+                        // pending tx observer
+                        startPendingTxFilter(network.getNetworkName(), network.getBlockTime(),
+                            network.getPendingTxPollingInterval(), ethNode);
+                    }
                 } catch (Exception e) {
-                    log.error("Exception occur while registering filters", e);
+                    logger.error("Exception occur while registering filters", e);
                     ethRpcServiceManager.cancelBlockFilter(ethNode);
                     ethRpcServiceManager.cancelPendingTxFilter(ethNode);
                 }
@@ -98,7 +100,7 @@ public class EthereumObserver {
         };
 
         boolean result = ethRpcServiceManager.registerBlockFilter(ethNode, blockTime, onBlock);
-        log.debug("## Tried to register block filter : {} > {}", ethNode.getNodeName(), result);
+        logger.debug("## Tried to register block filter : {} > {}", ethNode.getNodeName(), result);
     }
 
     private void startPendingTxFilter(String networkName, long blockTime, long pollingInterval, EthereumNode ethNode) {
@@ -108,6 +110,6 @@ public class EthereumObserver {
         };
 
         boolean result = ethRpcServiceManager.registerPendingTxFilter(ethNode, blockTime, pollingInterval, onPendingTx);
-        log.debug("## Tried to register pending tx filter : {} > {}", ethNode.getNodeName(), result);
+        logger.debug("## Tried to register pending tx filter : {} > {}", ethNode.getNodeName(), result);
     }
 }

@@ -12,6 +12,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -30,6 +31,7 @@ import org.springframework.kafka.core.ProducerFactory;
  * @GitHub : https://github.com/zacscoding
  */
 @Slf4j(topic = "config")
+@ConditionalOnProperty(value = "eth.enabled", havingValue = "true")
 @ConditionalOnBean(value = EthereumConfiguration.class)
 @Configuration
 @EnableKafka // DEV FOR CONSUMER
@@ -44,9 +46,9 @@ public class EthereumKafkaConfiguration {
         this.kafkaProperties = kafkaProperties;
         this.ethKafkaProperties = ethKafkaProperties;
 
-        log.info("## eth kafka properties ===================================================");
-        log.debug(GsonUtil.toStringPretty(ethKafkaProperties));
-        log.info("=======================================================================");
+        logger.info("## eth kafka properties ===================================================");
+        logger.debug(GsonUtil.toStringPretty(ethKafkaProperties));
+        logger.info("=======================================================================");
     }
 
     @Bean

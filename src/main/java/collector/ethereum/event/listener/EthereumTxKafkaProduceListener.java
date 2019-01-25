@@ -14,17 +14,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 /**
+ * Produce kafka tx messages
+ *
  * @author zacconding
  */
 @Slf4j(topic = "listener")
 @Component
 @ConditionalOnBean(value = EthereumConfiguration.class)
-public class EthereumTransactionListener {
+public class EthereumTxKafkaProduceListener {
 
     private EthereumKafkaProducer ethKafkaProducer;
 
     @Autowired
-    public EthereumTransactionListener(EthereumKafkaProducer ethKafkaProducer,
+    public EthereumTxKafkaProduceListener(EthereumKafkaProducer ethKafkaProducer,
         EthereumPendingTxPublisher ethPendingTxPublisher,
         EthereumTransactionPublisher ethTxPublisher) {
 
@@ -38,7 +40,7 @@ public class EthereumTransactionListener {
     @Subscribe
     @AllowConcurrentEvents
     public void onPendingTx(EthereumPendingTxEvent pendingTxEvent) {
-        log.info("## subscribe pending tx event. network : {} / node : {} / hash : {}"
+        logger.info("## subscribe pending tx event. network : {} / node : {} / hash : {}"
             , pendingTxEvent.getNetworkName(), pendingTxEvent.getNodeName(), pendingTxEvent.getPendingTx().getHash());
 
         ethKafkaProducer.produceEthereumPendingTxMessage(pendingTxEvent);
@@ -47,7 +49,7 @@ public class EthereumTransactionListener {
     @Subscribe
     @AllowConcurrentEvents
     public void onTransaction(EthereumTxEvent txEvent) {
-        log.info("## subscribe tx event. network : {} / node : {} / hash : {} / status : {}"
+        logger.info("## subscribe tx event. network : {} / node : {} / hash : {} / status : {}"
             , txEvent.getNetworkName(), txEvent.getEthereumNode().getNodeName()
             , txEvent.getTransaction().getHash(), txEvent.getTransactionReceipt().getStatus());
 

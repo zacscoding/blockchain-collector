@@ -36,6 +36,6 @@ public class EthereumKafkaConsumerForDev {
     }
 
     private void printMessageLog(String prefix, String message) {
-        log.info(prefix + "\n" + GsonUtil.jsonStringToPretty(message));
+        logger.info(prefix + "\n" + GsonUtil.jsonStringToPretty(message));
     }
 }

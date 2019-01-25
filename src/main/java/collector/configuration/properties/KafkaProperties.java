@@ -22,9 +22,9 @@ public class KafkaProperties {
 
     @PostConstruct
     private void setUp() {
-        log.info("## kafka properties ===================================================");
-        log.debug(GsonUtil.toStringPretty(this));
-        log.info("=======================================================================");
+        logger.info("## kafka properties ===================================================");
+        logger.debug(GsonUtil.toStringPretty(this));
+        logger.info("=======================================================================");
     }
 
     @Getter

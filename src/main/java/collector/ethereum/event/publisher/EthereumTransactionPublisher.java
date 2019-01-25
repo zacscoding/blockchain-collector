@@ -37,6 +37,6 @@ public class EthereumTransactionPublisher {
     public void register(Object listener) {
         Objects.requireNonNull(listener, "listener must be not null");
         asyncEventBus.register(listener);
-        log.debug("## Success to register listener : {} at Eth Tx Publisher", listener.getClass().getSimpleName());
+        logger.debug("## Success to register listener : {} at Eth Tx Publisher", listener.getClass().getSimpleName());
     }
 }

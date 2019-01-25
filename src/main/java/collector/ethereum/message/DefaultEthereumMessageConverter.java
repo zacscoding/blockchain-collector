@@ -73,7 +73,7 @@ public class DefaultEthereumMessageConverter implements EthereumMessageConverter
 
             return sw.toString();
         } catch (Exception e) {
-            log.warn("Failed to convert block event to message", e);
+            logger.warn("Failed to convert block event to message", e);
             throw new RuntimeException(e);
         }
     }
@@ -117,7 +117,7 @@ public class DefaultEthereumMessageConverter implements EthereumMessageConverter
                 .endObject().flush();
             return sw.toString();
         } catch (Exception e) {
-            log.warn("Failed to convert tx event to message", e);
+            logger.warn("Failed to convert tx event to message", e);
             throw new RuntimeException(e);
         }
     }
@@ -150,7 +150,7 @@ public class DefaultEthereumMessageConverter implements EthereumMessageConverter
 
             return sw.toString();
         } catch (Exception e) {
-            log.warn("Failed to convert pending tx event to message", e);
+            logger.warn("Failed to convert pending tx event to message", e);
             throw new RuntimeException(e);
         }
     }

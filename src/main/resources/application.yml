@@ -1,15 +1,21 @@
-# Enable blockchain
+#######################################################
+# Blockchain configuration
+#######################################################
 blockchain:
   eth:
     # enable | disable ethereum collector
     enabled: true
 
-# Kafka common
+#######################################################
+# Kafka configuration
+#######################################################
 kafka:
   common:
     bootstrap:
       servers: 192.168.79.128:9092
+  # produce ethereum messages
   eth:
+    enabled: true
     topic:
       # ethereum block event message topic
       block: eth-block
@@ -18,7 +24,29 @@ kafka:
       # ethereum pending tx event message topic
       pendingTx: eth-pending-tx
 
-# Blockchain node infos
+#######################################################
+# Elasticsearch configuration
+#######################################################
+elasticsearch:
+  enabled: true
+  common:
+    hosts:
+      - http://192.168.79.128:9200
+  # saving ethereum data to elasticsearch
+  eth:
+    enabled: true
+    # rolling index rule {networkName}-{blocks | transactions}-{startBlockNumber}
+    # such as ["network-blocks-0", "network-blocks-100000"] indices
+    # => blocks with number range [0,100000) are stored in "network-blocks-1" index
+    # => blocks with number range [100000,200000) are stored in "network-blocks-50000" index
+    # => transaction is also applied depend on block number
+    rollingRule: true
+    rollingBlockRule: 100000
+    rollingTxRule: 50000
+
+#######################################################
+# Blockchain node configuration
+#######################################################
 nodes:
   eth:
     networks:
@@ -30,15 +58,19 @@ nodes:
             httpUrl: http://192.168.79.128:8540/
             ipcPath:
             webSocketUrl:
-          #- nodeName: Node02
-           # httpUrl:
+            #- nodeName: Node02
+            # httpUrl:
             #ipcPath:
             #webSocketUrl: ws://192.168.79.128:8451
 
+#######################################################
 # logging
+#######################################################
 logging:
   config: classpath:logback.xml
 
-# Server
+#######################################################
+# Server & Spring
+#######################################################
 server:
   port: 8080
