@@ -1,7 +1,8 @@
-package collector.ethereum.configuration;
+package collector.configuration;
 
+import collector.configuration.EthereumConfiguration;
 import collector.configuration.properties.KafkaProperties;
-import collector.ethereum.configuration.properties.EthereumKafkaProperties;
+import collector.configuration.properties.EthereumKafkaProperties;
 import collector.util.GsonUtil;
 import java.util.HashMap;
 import java.util.Map;

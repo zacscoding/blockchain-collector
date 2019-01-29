@@ -20,4 +20,6 @@ import org.springframework.stereotype.Component;
 public class ElasticProperties {
 
     private List<String> hosts;
+    private int connectTimeout;
+    private int socketTimeout;
 }

@@ -1,5 +1,5 @@
 # Blockchain Collector  
-; Listen blockchain events & Produce kafka messages  
+; Listen blockchain events & Produce kafka messages & Saving data to elasticsearch  
 
 > ## Blockchain Events Listeners  
 
@@ -33,19 +33,26 @@ $ tail -f ../logs/collector.log
 
 ---  
 
+> ## Design  
+
+![blockchain collector design](./pics/blockchain_collector_design.png)  
+
+---  
+
 > ## TODO  
 
 - [x] ethereum subscribe(observer)  
 - [x] produce kafka message
 - [x] docker compose + update getting started
-- [ ] blockchain data save (elasticsearch or mongodb or etc)   
+- [ ] blockchain data save (elasticsearch)   
+- [ ] support ethereum rest api
 - [ ] pending transaction manager
 - [ ] clustering (zookeeper) will produce unique event message if register multiple noded    
 - [ ] multiple block chain (bitcoin, qtum, etc...)  
 
 ---  
 
-> ## Examples  
+> ## Kafka message examples  
 
 #### Block event  
 
@@ -175,4 +182,4 @@ $ tail -f ../logs/collector.log
     ]
   }
 }
-```
+```  

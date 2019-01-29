@@ -1,0 +1,80 @@
+{
+  "properties": {
+    "hash": {
+      "type": "keyword"
+    },
+    "nonce": {
+      "type": "keyword",
+      "index": false
+    },
+    "blockHash": {
+      "type": "keyword"
+    },
+    "blockNumber": {
+      "type": "long"
+    },
+    "transactionIndex": {
+      "type": "integer"
+    },
+    "from": {
+      "type": "keyword"
+    },
+    "to": {
+      "type": "keyword"
+    },
+    "value": {
+      "type": "keyword"
+    },
+    "gasPrice": {
+      "type": "keyword"
+    },
+    "gas": {
+      "type": "keyword",
+      "index": false
+    },
+    "txPrice": {
+      "type": "keyword"
+    },
+    "input": {
+      "type": "keyword",
+      "index": false
+    },
+    "timestamp": {
+      "type": "long"
+    },
+    "gasLimit": {
+      "type": "keyword",
+      "index": false
+    },
+    "cumulativeGasUsed": {
+      "type": "keyword",
+      "index": false
+    },
+    "contractAddress": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "logs": {
+      "properties": {
+        "removed": {
+          "type": "boolean"
+        },
+        "logIndex": {
+          "type": "keyword"
+        },
+        "data": {
+          "type": "text",
+          "index": false
+        },
+        "type": {
+          "type": "keyword"
+        },
+        "topics": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}

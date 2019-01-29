@@ -1,6 +1,6 @@
 package collector.ethereum.event.listener;
 
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumPendingTxEvent;
 import collector.ethereum.event.EthereumTxEvent;
 import collector.ethereum.event.publisher.EthereumPendingTxPublisher;

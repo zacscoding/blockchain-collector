@@ -1,6 +1,6 @@
 package collector.ethereum.message;
 
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.util.GsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

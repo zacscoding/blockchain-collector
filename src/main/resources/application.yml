@@ -32,6 +32,9 @@ elasticsearch:
   common:
     hosts:
       - http://192.168.79.128:9200
+    # timeout seconds
+    connectTimeout: 5
+    socketTimeout: 3
   # saving ethereum data to elasticsearch
   eth:
     enabled: true

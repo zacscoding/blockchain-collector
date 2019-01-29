@@ -1,0 +1,89 @@
+{
+  "_all": {
+    "enabled": false
+  },
+  "properties": {
+    "hash": {
+      "type": "keyword"
+    },
+    "number": {
+      "type": "long"
+    },
+    "parentHash": {
+      "type": "keyword"
+    },
+    "nonce": {
+      "type": "keyword",
+      "index": false
+    },
+    "sha3Uncles": {
+      "type": "keyword",
+      "index": false
+    },
+    "miner": {
+      "type": "keyword"
+    },
+    "difficulty": {
+      "type": "keyword",
+      "index": false
+    },
+    "extraData": {
+      "type": "keyword",
+      "index": false
+    },
+    "size": {
+      "type": "keyword",
+      "index": false
+    },
+    "gasLimit": {
+      "type": "keyword",
+      "index": false
+    },
+    "gasUsed": {
+      "type": "keyword",
+      "index": false
+    },
+    "timestamp": {
+      "type": "long"
+    },
+    "receiptsRoot": {
+      "type": "keyword",
+      "index": false
+    },
+    "stateRoot": {
+      "type": "keyword",
+      "index": false
+    },
+    "transactionsRoot": {
+      "type": "keyword",
+      "index": false
+    },
+    "logsBloom": {
+      "type": "keyword",
+      "index": false
+    },
+    "mixHash": {
+      "type": "keyword"
+    },
+    "txFees": {
+      "type": "keyword",
+      "index": false
+    },
+    "transactions": {
+      "type": "text"
+    },
+    "uncles": {
+      "type": "text"
+    },
+    "sealFields": {
+      "type": "text"
+    },
+    "txCount": {
+      "type": "integer"
+    },
+    "totalDifficulty": {
+      "type": "keyword",
+      "index": false
+    }
+  }
+}

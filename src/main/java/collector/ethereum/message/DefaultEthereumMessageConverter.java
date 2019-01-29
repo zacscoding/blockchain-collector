@@ -1,6 +1,6 @@
 package collector.ethereum.message;
 
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumPendingTxEvent;
 import collector.ethereum.event.EthereumTxEvent;
@@ -20,11 +20,13 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 /**
  * Convert events to message with json format
  *
+ * can define convert class by impl EthereumMessageConverter
+ *
  * @author zacconding
  * @Date 2018-12-20
  * @GitHub : https://github.com/zacscoding
  */
-@Slf4j(topic = "message")
+@Slf4j(topic = "parser")
 @Component
 @ConditionalOnBean(value = EthereumConfiguration.class)
 public class DefaultEthereumMessageConverter implements EthereumMessageConverter {

@@ -1,6 +1,6 @@
-package collector.ethereum.configuration;
+package collector.configuration;
 
-import collector.ethereum.configuration.properties.EthereumProperties;
+import collector.configuration.properties.EthereumProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

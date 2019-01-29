@@ -1,7 +1,7 @@
 package collector.ethereum.event.publisher;
 
 import collector.ethereum.EthereumNode;
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumTxEvent;
 import collector.ethereum.rpc.EthereumRpcServiceManager;

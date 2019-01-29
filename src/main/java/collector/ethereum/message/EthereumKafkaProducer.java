@@ -1,12 +1,11 @@
 package collector.ethereum.message;
 
-import collector.ethereum.configuration.EthereumConfiguration;
-import collector.ethereum.configuration.properties.EthereumKafkaProperties;
+import collector.configuration.EthereumConfiguration;
+import collector.configuration.properties.EthereumKafkaProperties;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumEvent;
 import collector.ethereum.event.EthereumPendingTxEvent;
 import collector.ethereum.event.EthereumTxEvent;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

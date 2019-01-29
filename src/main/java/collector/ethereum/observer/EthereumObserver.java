@@ -2,8 +2,8 @@ package collector.ethereum.observer;
 
 import collector.ethereum.EthereumNetwork;
 import collector.ethereum.EthereumNode;
-import collector.ethereum.configuration.EthereumConfiguration;
-import collector.ethereum.configuration.properties.EthereumProperties;
+import collector.configuration.EthereumConfiguration;
+import collector.configuration.properties.EthereumProperties;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumPendingTxEvent;
 import collector.ethereum.event.publisher.EthereumBlockPublisher;
@@ -11,7 +11,6 @@ import collector.ethereum.event.publisher.EthereumPendingTxPublisher;
 import collector.ethereum.rpc.EthereumRpcServiceManager;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

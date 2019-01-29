@@ -1,6 +1,6 @@
 package collector.ethereum.event.publisher;
 
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumTxEvent;
 import collector.util.CollectorThreadFactory;
 import com.google.common.eventbus.AsyncEventBus;

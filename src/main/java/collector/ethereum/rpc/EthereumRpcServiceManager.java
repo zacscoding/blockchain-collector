@@ -1,7 +1,7 @@
 package collector.ethereum.rpc;
 
 import collector.ethereum.EthereumNode;
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.util.OSUtil;
 import java.io.IOException;
 import java.net.ConnectException;

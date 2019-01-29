@@ -1,4 +1,4 @@
-package collector.ethereum.configuration.properties;
+package collector.configuration.properties;
 
 import collector.ethereum.EthereumNetwork;
 import java.util.List;

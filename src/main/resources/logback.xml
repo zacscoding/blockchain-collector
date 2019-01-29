@@ -45,6 +45,6 @@
     <logger name="publisher" level="DEBUG"/>
     <logger name="listener" level="DEBUG"/>
     <logger name="message" level="DEBUG"/>
-
-
+    <logger name="api" level="DEBUG"/>
+    <logger name="parser" level="DEBUG"/>
 </configuration>

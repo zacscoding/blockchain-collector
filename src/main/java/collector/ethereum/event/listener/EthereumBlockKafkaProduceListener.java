@@ -1,6 +1,6 @@
 package collector.ethereum.event.listener;
 
-import collector.ethereum.configuration.EthereumConfiguration;
+import collector.configuration.EthereumConfiguration;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.publisher.EthereumBlockPublisher;
 import collector.ethereum.event.publisher.EthereumTransactionPublisher;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
-import org.web3j.protocol.core.methods.response.EthBlock.Block;
 
 /**
  * @author zacconding

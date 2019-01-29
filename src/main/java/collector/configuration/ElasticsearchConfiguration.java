@@ -1,6 +1,7 @@
 package collector.configuration;
 
 import collector.configuration.properties.ElasticProperties;
+import java.time.Duration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
@@ -10,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.client.ClientConfiguration;
+import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @GitHub : https://github.com/zacscoding
@@ -31,14 +32,16 @@ public class ElasticsearchConfiguration {
 
     @Bean
     public RestHighLevelClient restHighLevelClient() {
-        List<String> hostUrls = properties.getHosts();
-        HttpHost[] hosts = new HttpHost[hostUrls.size()];
+        String[] hostUrls = new String[properties.getHosts().size()];
+        properties.getHosts().toArray(hostUrls);
 
-        for (int i = 0; i < hostUrls.size(); i++) {
-            hosts[i] = new HttpHost(hostUrls.get(i));
-        }
+        ClientConfiguration clientConfiguration = ClientConfiguration.builder()
+            .connectedTo(hostUrls)
+            .withConnectTimeout(Duration.ofSeconds(properties.getConnectTimeout()))
+            .withSocketTimeout(Duration.ofSeconds(properties.getSocketTimeout()))
+            .build();
 
-        return new RestHighLevelClient(RestClient.builder(hosts));
+        return RestClients.create(clientConfiguration).rest();
     }
 
     @Bean
