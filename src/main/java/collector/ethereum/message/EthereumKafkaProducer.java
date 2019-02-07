@@ -1,6 +1,7 @@
 package collector.ethereum.message;
 
 import collector.configuration.EthereumConfiguration;
+import collector.configuration.EthereumKafkaConfiguration;
 import collector.configuration.properties.EthereumKafkaProperties;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.EthereumEvent;
@@ -24,7 +25,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
  */
 @Slf4j(topic = "message")
 @Component
-@ConditionalOnBean(value = EthereumConfiguration.class)
+@ConditionalOnBean(value = {EthereumKafkaConfiguration.class})
 public class EthereumKafkaProducer {
 
     private EthereumMessageConverter messageConverter;

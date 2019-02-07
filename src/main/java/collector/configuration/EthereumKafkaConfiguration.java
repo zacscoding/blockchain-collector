@@ -32,8 +32,8 @@ import org.springframework.kafka.core.ProducerFactory;
  * @GitHub : https://github.com/zacscoding
  */
 @Slf4j(topic = "config")
-@ConditionalOnProperty(value = "eth.enabled", havingValue = "true")
-@ConditionalOnBean(value = EthereumConfiguration.class)
+@ConditionalOnBean(value = {EthereumConfiguration.class})
+@ConditionalOnProperty(name = "kafka.eth.enabled", havingValue = "true")
 @Configuration
 @EnableKafka // DEV FOR CONSUMER
 public class EthereumKafkaConfiguration {

@@ -1,6 +1,7 @@
 package collector.configuration;
 
 import collector.configuration.properties.EthereumProperties;
+import collector.util.GsonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class EthereumConfiguration {
     public EthereumConfiguration(EthereumProperties properties) {
         try {
             logger.info("## Ethereum Properties ##\n{}\n============================================",
-                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(properties.getNetworks())
+                GsonUtil.toStringPretty(properties)
             );
         } catch (Exception e) {
             logger.warn("Failed to parse ethereum properties : ", e);

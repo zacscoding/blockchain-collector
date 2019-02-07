@@ -1,6 +1,7 @@
 package collector.ethereum.event.listener;
 
 import collector.configuration.EthereumConfiguration;
+import collector.configuration.EthereumKafkaConfiguration;
 import collector.ethereum.event.EthereumBlockEvent;
 import collector.ethereum.event.publisher.EthereumBlockPublisher;
 import collector.ethereum.event.publisher.EthereumTransactionPublisher;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j(topic = "listener")
 @Component
-@ConditionalOnBean(value = EthereumConfiguration.class)
+@ConditionalOnBean(value = {EthereumConfiguration.class, EthereumKafkaConfiguration.class})
 public class EthereumBlockKafkaProduceListener {
 
     private EthereumKafkaProducer ethKafkaProducer;

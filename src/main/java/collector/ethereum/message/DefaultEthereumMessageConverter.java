@@ -26,7 +26,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
  * @Date 2018-12-20
  * @GitHub : https://github.com/zacscoding
  */
-@Slf4j(topic = "parser")
+@Slf4j(topic = "parser.kafka")
 @Component
 @ConditionalOnBean(value = EthereumConfiguration.class)
 public class DefaultEthereumMessageConverter implements EthereumMessageConverter {

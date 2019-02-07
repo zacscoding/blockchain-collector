@@ -26,7 +26,7 @@ import org.web3j.utils.Numeric;
  *
  * @GitHub : https://github.com/zacscoding
  */
-@Slf4j(topic = "parser")
+@Slf4j(topic = "parser.elastic")
 public class EthereumElasticParser {
 
     public static EthereumElasticParser INSTANCE = new EthereumElasticParser();
@@ -59,7 +59,7 @@ public class EthereumElasticParser {
                 for (TransactionResult txResult : txResults) {
                     Transaction tx = (Transaction) txResult.get();
                     txnsHashes.add(tx.getHash());
-                    String txPriceVal = convertTxPrice(tx.getGas(), tx.getGasPrice());
+                    String txPriceVal = calculateTxPrice(tx.getGas(), tx.getGasPrice());
                     if (StringUtils.hasText(txPriceVal)) {
                         blockTxFees = blockTxFees.add(new BigDecimal(txPriceVal));
                     }
@@ -72,7 +72,7 @@ public class EthereumElasticParser {
                 for (TransactionResult txResult : txResults) {
                     TransactionObject txObject = (TransactionObject) txResult.get();
                     txnsHashes.add(txObject.getHash());
-                    String txPriceVal = convertTxPrice(txObject.getGas(), txObject.getGasPrice());
+                    String txPriceVal = calculateTxPrice(txObject.getGas(), txObject.getGasPrice());
                     if (StringUtils.hasText(txPriceVal)) {
                         blockTxFees = blockTxFees.add(new BigDecimal(txPriceVal));
                     }
@@ -113,7 +113,7 @@ public class EthereumElasticParser {
     /**
      * Parse web3j transaction, transaction receipt response to elasticsearch entity
      */
-    public EthereumElasticTxEntity convertTransaction(Transaction tx, TransactionReceipt tr, long timestamp) {
+    public EthereumElasticTxEntity parseTransaction(Transaction tx, TransactionReceipt tr, long timestamp) {
         if (tx == null || tr == null) {
             return null;
         }
@@ -135,11 +135,11 @@ public class EthereumElasticParser {
             .cumulativeGasUsed(tr.getCumulativeGasUsedRaw())
             .contractAddress(tr.getContractAddress())
             .status(tr.getStatus())
-            .logs(convertLogs(tr))
+            .logs(parseLogs(tr))
             .build();
     }
 
-    public List<EthereumElasticLogEntity> convertLogs(TransactionReceipt tr) {
+    public List<EthereumElasticLogEntity> parseLogs(TransactionReceipt tr) {
         if (tr == null || CollectionUtil.isEmpty(tr.getLogs())) {
             return Collections.emptyList();
         }
@@ -155,7 +155,7 @@ public class EthereumElasticParser {
         ).collect(Collectors.toList());
     }
 
-    private String convertTxPrice(BigInteger gas, BigInteger gasPrice) {
+    private String calculateTxPrice(BigInteger gas, BigInteger gasPrice) {
         if (gas == null || gasPrice == null) {
             return null;
         }

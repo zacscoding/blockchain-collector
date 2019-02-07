@@ -24,8 +24,7 @@ public class EthereumPendingTxPublisher {
 
     private EventBus asyncEventBus;
 
-    @PostConstruct
-    private void setUp() {
+    public EthereumPendingTxPublisher() {
         CollectorThreadFactory factory = new CollectorThreadFactory("pending-tx-publisher", true);
         this.asyncEventBus = new AsyncEventBus("pending-tx-event-bus", Executors.newCachedThreadPool(factory));
     }

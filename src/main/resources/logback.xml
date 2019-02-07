@@ -33,7 +33,7 @@
         <appender-ref ref="FILE"/>
     </appender>
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ASYNC"/>
     </root>
@@ -47,4 +47,6 @@
     <logger name="message" level="DEBUG"/>
     <logger name="api" level="DEBUG"/>
     <logger name="parser" level="DEBUG"/>
+    <logger name="es" level="DEBUG"/>
+    <logger name="dev" level="DEBUG"/>
 </configuration>
