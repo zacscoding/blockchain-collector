@@ -22,23 +22,22 @@ public class EmbeddedElasticsearchTestRunner {
     @BeforeClass
     public static void classSetUp() throws Exception {
         EmbeddedElasticsearch.INSTANCE.start();
-        restHighLevelClient = EmbeddedElasticsearch.INSTANCE.getRestHighLevelClient();
+        /*restHighLevelClient = EmbeddedElasticsearch.INSTANCE.getRestHighLevelClient();
         DeleteIndexRequest request = new DeleteIndexRequest("_all");
-        restHighLevelClient.indices().delete(request);
+        restHighLevelClient.indices().delete(request);*/
     }
 
     @AfterClass
     public static void classTearDown() throws Exception {
         try {
             EmbeddedElasticsearch.INSTANCE.stop();
-            DeleteIndexRequest request = new DeleteIndexRequest("_all");
-            restHighLevelClient.indices().delete(request);
+            /*DeleteIndexRequest request = new DeleteIndexRequest("_all");
+            restHighLevelClient.indices().delete(request);*/
         } catch (Exception e) {
             if (!(e instanceof IOException)) {
                 throw e;
             }
         }
-
     }
 
     @Before

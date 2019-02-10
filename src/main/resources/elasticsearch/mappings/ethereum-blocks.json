@@ -1,7 +1,4 @@
 {
-  "_all": {
-    "enabled": false
-  },
   "properties": {
     "hash": {
       "type": "keyword"
