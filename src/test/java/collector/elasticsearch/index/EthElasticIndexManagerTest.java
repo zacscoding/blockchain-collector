@@ -1,7 +1,6 @@
 package collector.elasticsearch.index;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.mockito.Mockito.mock;
 
 import collector.common.elasticsearch.AbstractElasticsearchRunner;
@@ -22,7 +21,7 @@ public class EthElasticIndexManagerTest extends AbstractElasticsearchRunner {
 
     @Before
     public void setUp() throws Exception {
-        super.deleteIndices();
+        //super.deleteIndices();
         ethElasticProperties = new EthElasticProperties();
         ethElasticProperties.setRollingRule(false);
         ethElasticIndexManager = new EthElasticIndexManager(ethElasticProperties, template);
@@ -71,7 +70,7 @@ public class EthElasticIndexManagerTest extends AbstractElasticsearchRunner {
         // then
         assertThat(mappingsResult).isTrue();
         Map mappings = template.getMapping(indexName, "_doc");
-        System.out.println(">> Mappings :: " + mappings);
+        assertThat(mappings).isNotNull();
     }
 
     @Test

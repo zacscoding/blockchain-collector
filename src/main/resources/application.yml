@@ -17,7 +17,7 @@ nodes:
         pendingTxPollingInterval: 1000
         nodes:
           - nodeName: Node01
-            httpUrl: http://192.168.79.128:8540/
+            httpUrl: http://192.168.79.129:8450
             ipcPath:
             webSocketUrl:
           - nodeName: Node02
@@ -29,7 +29,7 @@ nodes:
 # Kafka configuration
 #######################################################
 kafka:
-  enabled: true
+  enabled: false
   common:
     bootstrap:
       servers: 192.168.79.128:9092
@@ -48,10 +48,10 @@ kafka:
 # Elasticsearch configuration
 #######################################################
 elasticsearch:
-  enabled: false
+  enabled: true
   common:
     hosts:
-      - http://192.168.79.128:9200
+      - 192.168.5.78:9200
     # timeout seconds
     connectTimeout: 5
     socketTimeout: 3

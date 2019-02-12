@@ -19,6 +19,7 @@ public class EthTxEvent extends EthEvent {
 
     private String networkName;
     private EthereumNode ethereumNode;
+    private long blockTimestamp;
     private Transaction transaction;
     private TransactionReceipt transactionReceipt;
 
@@ -27,7 +28,7 @@ public class EthTxEvent extends EthEvent {
     }
 
     public EthTxEvent(String networkName, EthereumNode ethereumNode,
-        Transaction transaction, TransactionReceipt transactionReceipt) {
+        Transaction transaction, TransactionReceipt transactionReceipt, long blockTimestamp) {
 
         super(EthereumEventType.TRANSACTION);
 
@@ -35,6 +36,7 @@ public class EthTxEvent extends EthEvent {
         this.ethereumNode = ethereumNode;
         this.transaction = transaction;
         this.transactionReceipt = transactionReceipt;
+        this.blockTimestamp = blockTimestamp;
     }
 
     @Override

@@ -2,13 +2,17 @@ package collector.elasticsearch.index;
 
 import collector.configuration.EthElasticConfiguration;
 import collector.configuration.properties.EthElasticProperties;
+import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.rest.RestStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.data.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -23,6 +27,7 @@ import org.springframework.util.StringUtils;
 @Component
 public class EthElasticIndexManager {
 
+    private final String defaultType = "_doc";
     private EthElasticProperties properties;
     private ElasticsearchRestTemplate template;
 
@@ -31,6 +36,29 @@ public class EthElasticIndexManager {
         this.properties = properties;
         this.template = template;
     }
+
+    /**
+     * Create index and put mappings if not exist
+     *
+     * @return true : success to create index & put mapping, otherwise false
+     */
+    public boolean createIndexAndPutMappingIfNotExist(String indexName, Class<?> clazz) {
+        boolean indexResult = createIndexIfNotExist(indexName, clazz);
+
+        if (!indexResult) {
+            return false;
+        }
+
+        boolean existMapping = false;
+        try {
+            existMapping = template.getMapping(indexName, defaultType) == null;
+        } catch (ElasticsearchException e) {
+            existMapping = false;
+        }
+
+        return existMapping ? true : putMapping(indexName, clazz);
+    }
+
 
     /**
      * Create index with settings
@@ -58,6 +86,12 @@ public class EthElasticIndexManager {
                 return template.createIndex(indexName);
             }
         } catch (Exception e) {
+            if (e instanceof ElasticsearchStatusException) {
+                ElasticsearchStatusException statusException = (ElasticsearchStatusException) e;
+                if (statusException.status().getStatus() == RestStatus.CONFLICT.getStatus()) {
+                    return true;
+                }
+            }
             logger.error("Exception occur while create index : {}", indexName, e);
             return false;
         }
@@ -80,7 +114,7 @@ public class EthElasticIndexManager {
 
         PutMappingRequest request = new PutMappingRequest();
         request.indices(indexName);
-        request.type("_doc");
+        request.type(defaultType);
         request.source(mappings, XContentType.JSON);
 
         try {
@@ -111,6 +145,10 @@ public class EthElasticIndexManager {
      */
     public String getTxIndex(String networkName, long blockNumber) {
         return getRollingIndex(networkName + "-transactions", blockNumber, properties.getRollingTxNumber());
+    }
+
+    public String getDefaultType() {
+        return defaultType;
     }
 
     /**
@@ -157,6 +195,6 @@ public class EthElasticIndexManager {
 
         long suffix = blockNumber - (blockNumber % rollingRange);
 
-        return prefix + "-" + suffix;
+        return (prefix + "-" + suffix).toLowerCase();
     }
 }

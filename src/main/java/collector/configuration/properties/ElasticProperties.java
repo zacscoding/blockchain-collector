@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConditionalOnProperty(value = "elasticsearch.enabled", havingValue = "true")
-@ConfigurationProperties(prefix = "elasticsearch")
+@ConfigurationProperties(prefix = "elasticsearch.common")
 public class ElasticProperties {
 
     private List<String> hosts;

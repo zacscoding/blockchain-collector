@@ -1,4 +1,4 @@
-package collector.event.listener;
+package collector.event.listener.kafka;
 
 import collector.configuration.EthConfiguration;
 import collector.configuration.EthKafkaConfiguration;
@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "listener")
 @Component
 @ConditionalOnBean(value = {EthConfiguration.class, EthKafkaConfiguration.class})
-public class EthereumTxKafkaProduceListener {
+public class EthTxKafkaProduceListener {
 
     private EthKafkaProducer ethKafkaProducer;
 
     @Autowired
-    public EthereumTxKafkaProduceListener(EthKafkaProducer ethKafkaProducer,
+    public EthTxKafkaProduceListener(EthKafkaProducer ethKafkaProducer,
         EthPendingTxPublisher ethPendingTxPublisher,
         EthTransactionPublisher ethTxPublisher) {
 

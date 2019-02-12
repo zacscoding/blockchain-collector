@@ -67,7 +67,8 @@ public class EthBlockPublisher {
     public void register(Object listener) {
         Objects.requireNonNull(listener, "listener must be not null");
         asyncEventBus.register(listener);
-        logger.debug("## Success to register listener : {} at Eth Block Publisher", listener.getClass().getSimpleName());
+        logger.debug("## Success to register listener : {} at Eth Block Publisher",
+            listener.getClass().getSimpleName());
     }
 
     private Callable<Void> publishTransactions(Block block, String networkName, long blockTime, EthereumNode ethNode) {
@@ -84,6 +85,7 @@ public class EthBlockPublisher {
 
                 txEvent.setNetworkName(networkName);
                 txEvent.setEthereumNode(ethNode);
+                txEvent.setBlockTimestamp(block.getTimestamp().longValue());
                 txEvent.setTransaction(tx);
                 txEvent.setTransactionReceipt(tr);
 

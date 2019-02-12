@@ -16,7 +16,6 @@ import org.junit.Ignore;
 @Ignore
 public class EmbeddedElasticsearchTestRunner {
 
-
     protected static RestHighLevelClient restHighLevelClient;
 
     @BeforeClass
